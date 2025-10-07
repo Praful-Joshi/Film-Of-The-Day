@@ -10,12 +10,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(option=>
 var app = builder.Build();
 
 //seed data
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    // Run all seeders
-    await DBSeeder.SeedDataToDB(dbContext);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//     // Run all seeders
+//     await DBSeeder.SeedDataToDB(dbContext);
+// }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
