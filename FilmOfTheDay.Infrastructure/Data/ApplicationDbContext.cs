@@ -1,5 +1,6 @@
 using FilmOfTheDay.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+
 namespace FilmOfTheDay.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
@@ -49,8 +50,6 @@ namespace FilmOfTheDay.Infrastructure.Data
                     .OnDelete(DeleteBehavior.Cascade); // Only one cascade path allowed
             });
         }
-
-
         public DbSet<User> Users { get; set; }
         public DbSet<FilmPost> FilmPosts { get; set; } = null!;
         public DbSet<Friendship> Friendships { get; set; } = null!;

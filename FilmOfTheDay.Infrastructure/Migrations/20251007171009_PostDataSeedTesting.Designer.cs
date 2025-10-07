@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmOfTheDay.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251007031811_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251007171009_PostDataSeedTesting")]
+    partial class PostDataSeedTesting
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
