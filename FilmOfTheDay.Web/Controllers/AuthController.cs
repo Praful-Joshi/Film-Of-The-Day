@@ -87,5 +87,12 @@ public class AuthController : Controller
 
         return RedirectToAction("Index", "Home");
     }
-        
+
+    // POST: /Auth/Logout
+    [HttpGet]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login", "Auth");
+    }
 }
