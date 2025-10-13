@@ -21,7 +21,12 @@ var app = builder.Build();
 //     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 //     // Run all seeders
 //     await DBSeeder.SeedDataToDB(dbContext);
+//     //delete last 5 posts from the filmposts table
+//     // var postsToDelete = dbContext.FilmPosts.OrderByDescending(p => p.Id).Take(5).ToList();
+//     // dbContext.FilmPosts.RemoveRange(postsToDelete);
+//     // await dbContext.SaveChangesAsync();
 // }
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

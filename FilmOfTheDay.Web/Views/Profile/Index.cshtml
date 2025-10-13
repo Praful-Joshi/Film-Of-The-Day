@@ -1,0 +1,71 @@
+@model FilmOfTheDay.Web.Models.Profile.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<link rel="stylesheet" href="~/css/profile.css" />
+
+<div class="container mt-4">
+    <div class="profile-header d-flex align-items-center gap-4">
+        <img src="~/images/profile-placeholder.png" class="rounded-circle profile-pic" width="120" height="120" />
+        <div>
+            <h2>@Model.UserName</h2>
+            <p class="text-muted">@Model.Email</p>
+            <div class="d-flex gap-4 mt-2">
+                <div><strong>@Model.PostCount</strong> Posts</div>
+                <div><strong>@Model.FriendsCount</strong> Friends</div>
+                <div><strong>@Model.SavedCount</strong> Saved</div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="tabs text-center">
+        <button class="tab-btn active" onclick="showTab('posts')">Posts</button>
+        <button class="tab-btn" onclick="showTab('saved')">Saved</button>
+    </div>
+
+    <!-- Posts -->
+    <div id="posts" class="tab-content active">
+        <div class="row g-3 mt-3">
+            @if (Model.Posts.Any())
+            {
+                foreach (var post in Model.Posts)
+                {
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card shadow-sm border-0">
+                            <img src=@post.ImageUrl
+                                 class="card-img-top rounded" />
+                            <div class="card-body p-2">
+                                <h6 class="card-title text-center">@post.Title</h6>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center text-muted">No posts yet.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Saved -->
+    <div id="saved" class="tab-content">
+        <p class="text-center text-muted mt-4">Saved posts will appear here.</p>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+    document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+</script>
+}

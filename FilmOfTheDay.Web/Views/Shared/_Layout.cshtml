@@ -22,17 +22,20 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item me-2"> 
+                                <a class="nav-link btn" asp-controller="Profile" asp-action="Index">Profile</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            <li class="nav-item me-2">
+                                <a class="nav-link btn" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                        }
-                    </ul>
+                            <li class="nav-item me-2">
+                                <a class="nav-link btn" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            </li> 
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
@@ -43,14 +46,14 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    @* <footer class="border-top footer text-muted">
             @if (User?.Identity?.IsAuthenticated ?? false)
             {
                 <div class="container"> 
                     &copy; 2025 - FilmOfTheDay - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
             }
-    </footer>
+    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

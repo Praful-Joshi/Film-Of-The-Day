@@ -12,7 +12,8 @@ namespace FilmOfTheDay.Core.Entities
         [Required]
         public string Title { get; set; } = string.Empty;
 
-        public string? Description { get; set; }
+        [Required]
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

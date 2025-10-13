@@ -39,5 +39,36 @@ namespace FilmOfTheDay.Infrastructure.Data.Seeders
             await dbContext.SaveChangesAsync();
             Console.WriteLine("✅ Seeded 10 FilmPosts.");
         }
+        public static async Task SeedPostsToUser(ApplicationDbContext dbContext, String userEmail)
+        {
+            var random = new Random();
+            var posts = new List<FilmPost>();
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+            if (user != null)
+            {
+                //skip if user already has posts
+                if (await dbContext.FilmPosts.AnyAsync(p => p.UserId == user.Id))
+                {
+                    Console.WriteLine($"⚠️ User {user.Username} already has posts, skipping post seeding.");
+                    return;
+                }
+
+                for (int i = 1; i <= 5; i++)
+                {
+                    posts.Add(new FilmPost
+                    {
+                        UserId = user.Id,
+                        Title = $"Film Post #{i} by {user.Username}",
+                        Description = $"A review or thought about film #{i} by {user.Username}",
+                        CreatedAt = DateTime.UtcNow.AddDays(-random.Next(0, 30))
+                    });
+                }
+                await dbContext.FilmPosts.AddRangeAsync(posts);
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine($"✅ Seeded 5 FilmPosts for user {user.Username}.");
+            }
+            
+        }
     }
 }
