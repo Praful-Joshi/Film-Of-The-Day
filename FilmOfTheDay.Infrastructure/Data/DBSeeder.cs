@@ -8,8 +8,9 @@ namespace FilmOfTheDay.Infrastructure.Data
     {
         public static async Task SeedDataToDB(ApplicationDbContext dbContext)
         {
-            await UserSeeder.SeedAsync(dbContext);
-            await PostSeeder.SeedAsync(dbContext); 
+            // await UserSeeder.SeedAsync(dbContext);
+            // await PostSeeder.SeedAsync(dbContext); 
+            // await PostSeeder.SeedPostsToUser(dbContext, "prafuljoshi1010@gmail.com");
         }
     }
 }
