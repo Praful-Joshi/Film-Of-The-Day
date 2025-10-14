@@ -46,6 +46,16 @@
         </main>
     </div>
 
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <a asp-controller="Post" asp-action="Create" class="btn btn-primary rounded-circle shadow"
+           style="position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; font-size: 2rem; z-index: 1050;">
+            <span class="visually-hidden">Create Post</span>
+            <i class="bi bi-plus"></i>
+        </a>
+    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     @* <footer class="border-top footer text-muted">
             @if (User?.Identity?.IsAuthenticated ?? false)
             {

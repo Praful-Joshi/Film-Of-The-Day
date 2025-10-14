@@ -1,0 +1,62 @@
+@model FilmOfTheDay.Web.Models.Post.CreatePostViewModel
+
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<h2>Create a New Post</h2>
+
+<form asp-action="SearchMovie" method="post" class="mb-3">
+    <div class="input-group">
+        <input asp-for="SearchQuery" class="form-control" placeholder="Search movie or TV show..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if (Model.SearchResults != null && Model.SearchResults.Any())
+{
+    <h5>Select a Movie:</h5>
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+        @foreach (var movie in Model.SearchResults)
+        {
+            <div class="col">
+                <div class="card" style="cursor: pointer;"
+                     onclick="selectMovie('@movie.Title', '@movie.PosterUrl', '@movie.MovieUrl')">
+                    <img src="@movie.PosterUrl" class="card-img-top" />
+                    <div class="card-body p-2 text-center">
+                        <small>@movie.Title</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<form asp-action="CreatePost" method="post" class="mt-4">
+    <input type="hidden" id="SelectedMovieTitle" name="SelectedMovieTitle" />
+    <input type="hidden" id="SelectedMoviePosterUrl" name="SelectedMoviePosterUrl" />
+    <input type="hidden" id="SelectedMovieLink" name="SelectedMovieLink" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Post</button>
+</form>
+
+@section Scripts {
+    <script>
+        function selectMovie(title, posterUrl, movieUrl) {
+            document.getElementById('SelectedMovieTitle').value = title;
+            document.getElementById('SelectedMoviePosterUrl').value = posterUrl;
+            document.getElementById('SelectedMovieLink').value = movieUrl;
+            alert(`Selected: ${title}`);
+        }
+    </script>
+}
