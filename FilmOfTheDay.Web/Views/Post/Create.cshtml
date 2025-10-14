@@ -26,7 +26,10 @@
                     data-poster="@movie.PosterUrl" 
                     data-link="@movie.MovieUrl" 
                     style="cursor:pointer; max-width:100%;">
-                    <img src="@movie.PosterUrl" style="max-width:100%" class="card-img-top" />
+                    <img src="@movie.PosterUrl"
+                        onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                        style="max-width:100%;"
+                        class="card-img-top" />
                     <div class="card-body p-2 text-center">
                         <medium>@movie.Title</medium>
                     </div>
@@ -115,7 +118,6 @@
     }
     .movie-card .card-body.selected-movie {
         background-color: #66ee00;
-        transform: scale(1.02);
     }
 </style>
 }
