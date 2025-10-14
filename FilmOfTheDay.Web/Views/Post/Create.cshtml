@@ -15,14 +15,14 @@
 
 @if (Model.SearchResults != null && Model.SearchResults.Any())
 {
-    <h5>Select a Movie:</h5>
+    <h5>Select a film:</h5>
 
     <div id="movieGrid" class="row row-cols-2 row-cols-md-6 g-3">
         @foreach (var movie in Model.SearchResults)
         {
             <div class="col movie-card" style="display:none;">
                 <div class="card" style="cursor:pointer; max-width:70%;"
-                     onclick="selectMovie('@movie.Title', '@movie.PosterUrl', '@movie.MovieUrl')">
+                         onclick="selectMovie('@movie.Title', '@movie.PosterUrl', '@movie.MovieUrl', this)">
                     <img src="@movie.PosterUrl" style="max-width:100%" class="card-img-top" />
                     <div class="card-body p-2 text-center">
                         <small>@movie.Title</small>
@@ -57,11 +57,22 @@
 
 @section Scripts {
     <script>
-        function selectMovie(title, posterUrl, movieUrl) {
+        let selectedCard = null;
+
+        function selectMovie(title, posterUrl, movieUrl, clickedElement) {
+            // Update hidden form fields
             document.getElementById('SelectedMovieTitle').value = title;
             document.getElementById('SelectedMoviePosterUrl').value = posterUrl;
             document.getElementById('SelectedMovieLink').value = movieUrl;
-            alert(`Selected: ${title}`);
+
+            // Remove highlight from previous selection
+            if (selectedCard) {
+                selectedCard.querySelector('.card-body').classList.remove('selected-movie');
+            }
+
+            // Highlight the newly clicked card's title
+            selectedCard = clickedElement.closest('.movie-card');
+            selectedCard.querySelector('.card-body').classList.add('selected-movie');
         }
 
         const movieCards = document.querySelectorAll('.movie-card');
@@ -69,9 +80,8 @@
         let expanded = false;
 
         function getVisibleCount() {
-            // 2 rows depending on device width
-            if (window.innerWidth < 768) return 4;   // 2 per row → 2 rows
-            else return 12;                          // 6 per row → 2 rows
+            if (window.innerWidth < 768) return 4; // mobile (2x2)
+            else return 12; // desktop (2x6)
         }
 
         function updateVisibleMovies() {
@@ -82,17 +92,22 @@
             toggleBtn.textContent = expanded ? 'Show less' : 'Show more';
         }
 
-        // Initial load
         updateVisibleMovies();
-
-        // Handle resize
-        window.addEventListener('resize', () => {
-            if (!expanded) updateVisibleMovies();
-        });
-
-        toggleBtn?.addEventListener('click', () => {
-            expanded = !expanded;
-            updateVisibleMovies();
-        });
+        window.addEventListener('resize', () => { if (!expanded) updateVisibleMovies(); });
+        toggleBtn?.addEventListener('click', () => { expanded = !expanded; updateVisibleMovies(); });
     </script>
+
+    <style>
+        .movie-card .card-body {
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .movie-card .card-body.selected-movie {
+            background-color: #d4edda; /* light green */
+            border-radius: 4px;
+            transform: scale(1.03);
+        }
+    </style>
 }
+
+
