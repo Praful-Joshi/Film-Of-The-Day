@@ -16,19 +16,24 @@
 @if (Model.SearchResults != null && Model.SearchResults.Any())
 {
     <h5>Select a Movie:</h5>
-    <div class="row row-cols-2 row-cols-md-4 g-3">
+
+    <div id="movieGrid" class="row row-cols-2 row-cols-md-6 g-3">
         @foreach (var movie in Model.SearchResults)
         {
-            <div class="col">
-                <div class="card" style="cursor: pointer;"
+            <div class="col movie-card" style="display:none;">
+                <div class="card" style="cursor:pointer; max-width:70%;"
                      onclick="selectMovie('@movie.Title', '@movie.PosterUrl', '@movie.MovieUrl')">
-                    <img src="@movie.PosterUrl" class="card-img-top" />
+                    <img src="@movie.PosterUrl" style="max-width:100%" class="card-img-top" />
                     <div class="card-body p-2 text-center">
                         <small>@movie.Title</small>
                     </div>
                 </div>
             </div>
         }
+    </div>
+
+    <div class="text-center mt-3">
+        <button id="toggleBtn" type="button" class="btn btn-outline-secondary btn-sm">Show more</button>
     </div>
 }
 
@@ -58,5 +63,36 @@
             document.getElementById('SelectedMovieLink').value = movieUrl;
             alert(`Selected: ${title}`);
         }
+
+        const movieCards = document.querySelectorAll('.movie-card');
+        const toggleBtn = document.getElementById('toggleBtn');
+        let expanded = false;
+
+        function getVisibleCount() {
+            // 2 rows depending on device width
+            if (window.innerWidth < 768) return 4;   // 2 per row → 2 rows
+            else return 12;                          // 6 per row → 2 rows
+        }
+
+        function updateVisibleMovies() {
+            const visibleCount = getVisibleCount();
+            movieCards.forEach((card, index) => {
+                card.style.display = expanded || index < visibleCount ? 'block' : 'none';
+            });
+            toggleBtn.textContent = expanded ? 'Show less' : 'Show more';
+        }
+
+        // Initial load
+        updateVisibleMovies();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            if (!expanded) updateVisibleMovies();
+        });
+
+        toggleBtn?.addEventListener('click', () => {
+            expanded = !expanded;
+            updateVisibleMovies();
+        });
     </script>
 }
