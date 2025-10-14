@@ -1,0 +1,37 @@
+@model FilmOfTheDay.Web.Models.Post.ViewPostViewModel
+
+@{
+    ViewData["Title"] = "View Post";
+}
+
+<div class="post-container" style="max-width:600px;margin:40px auto;border:1px solid #ddd;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1);font-family:Arial, sans-serif;">
+
+    <!-- Post Header -->
+    <div class="post-header" style="display:flex;align-items:center;padding:10px 15px;border-bottom:1px solid #eee;">
+        <a href="/Profile/@Model.UserName" style="text-decoration:none;color:#000;font-weight:bold;margin-left:10px;">
+            @Model.UserName
+        </a>
+    </div>
+
+    <!-- Post Image -->
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="post-image" style="width:100%;text-align:center;background:#fafafa;">
+            <img src="@Model.ImageUrl" alt="Post Image" style="max-width:50%;max-height:600px;object-fit:cover;" />
+        </div>
+    }
+
+    <!-- Action Buttons -->
+    <div class="post-actions" style="display:flex;align-items:center;padding:10px 15px;">
+        <button style="background:none;border:none;cursor:pointer;margin-right:10px;font-size:1.5rem;">❤️</button>
+        <button style="background:none;border:none;cursor:pointer;margin-right:10px;font-size:1.5rem;">💬</button>
+        <button style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.5rem;">🔖</button>
+    </div>
+
+    <!-- Post Details -->
+    <div class="post-details" style="padding:0 15px 15px;">
+        <p style="margin:5px 0;"><strong>@Model.UserName</strong> @Model.Description</p>
+        <div style="font-size:0.85em;color:#888;">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+    </div>
+
+</div>

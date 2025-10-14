@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FilmOfTheDay.Web.Models.Post;
 public class CreatePostViewModel
 {

@@ -33,6 +33,7 @@ namespace FilmOfTheDay.Web.Controllers
             //get the user's posts and convert them to list of ProfilePostViewModels
             var posts = await _dbContext.FilmPosts
                 .Where(p => p.UserId == user.Id)
+                .OrderByDescending(p => p.CreatedAt)
                 .Select(p => new ProfilePostViewModel
                 {
                     Id = p.Id,
