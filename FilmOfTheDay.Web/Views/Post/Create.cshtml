@@ -33,6 +33,10 @@
 }
 
 <form asp-action="CreatePost" method="post" class="mt-4">
+    <input type="hidden" id="SelectedMovieTitle" name="SelectedMovieTitle" />
+    <input type="hidden" id="SelectedMoviePosterUrl" name="SelectedMoviePosterUrl" />
+    <input type="hidden" id="SelectedMovieLink" name="SelectedMovieLink" />
+
     <div class="mb-3">
         <label asp-for="Title" class="form-label">Title</label>
         <input asp-for="Title" class="form-control" />

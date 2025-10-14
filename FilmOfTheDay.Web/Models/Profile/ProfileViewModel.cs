@@ -15,5 +15,5 @@ public class ProfilePostViewModel
     public int Id { get; set; }
     public string Title { get; set; } = "";
     public string Description { get; set; } = "";
-    public string ImageUrl { get; set; } = "https://picsum.photos/300";
+    public string ImageUrl { get; set; } = "";
 }
