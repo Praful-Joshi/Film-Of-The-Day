@@ -11,7 +11,7 @@ public class PostController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly HttpClient _httpClient;
-    private readonly string _tmdbApiKey = "e6bd40c5241c0bb8f42b775e601985b1"; // Get from themoviedb.org
+    private readonly string _tmdbApiKey = "e6bd40c5241c0bb8f42b775e601985b1";
 
     public PostController(ApplicationDbContext context)
     {
@@ -50,9 +50,8 @@ public class PostController : Controller
 
     // POST: Save Post
     [HttpPost]
-    public async Task<IActionResult> CreatePost(CreatePostViewModel model)
+    public async Task<IActionResult> Create(CreatePostViewModel model)
     {
-
         //get the logged in user's email from the claims
         var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FilmOfTheDay.Infrastructure.Data; // your dbcontext namespace
+using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
 
