@@ -77,4 +77,28 @@ public class PostController : Controller
 
         return View("Create", model);
     }
+
+    // GET: /Post/ViewPost/{id}
+    public async Task<IActionResult> ViewPost(int id)
+    {
+        var post = await _dbContext.FilmPosts
+            .Include(p => p.User)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (post == null)
+            return NotFound();
+
+        var viewModel = new ViewPostViewModel
+        {
+            Title = post.Title,
+            Description = post.Description,
+            ImageUrl = post.ImageUrl,
+            MovieUrl = post.MovieUrl,
+            UserName = post.User?.Username ?? "Unknown",
+            UserID = post.UserId,
+            CreatedAt = post.CreatedAt
+        };
+        return View(viewModel);
+    }
 }
