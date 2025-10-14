@@ -25,29 +25,6 @@ public class PostController : Controller
         return View(new CreatePostViewModel());
     }
 
-    // POST: Search Movie
-    [HttpPost]
-    public async Task<IActionResult> SearchMovie(CreatePostViewModel model)
-    {
-        if (string.IsNullOrWhiteSpace(model.SearchQuery))
-            return View("Create", model);
-
-        var url = $"https://api.themoviedb.org/3/search/movie?api_key={_tmdbApiKey}&query={Uri.EscapeDataString(model.SearchQuery)}";
-        var response = await _httpClient.GetStringAsync(url);
-        var data = JObject.Parse(response);
-
-        var results = data["results"]?.Select(r => new MovieResult
-        {
-            Title = r["title"]?.ToString() ?? "",
-            PosterUrl = r["poster_path"] != null ? $"https://image.tmdb.org/t/p/w500{r["poster_path"]}" : "",
-            MovieUrl = r["id"] != null ? $"https://www.themoviedb.org/movie/{r["id"]}" : ""
-        }).ToList();
-
-        model.SearchResults = results ?? new List<MovieResult>();
-
-        return View("Create", model);
-    }
-
     // POST: Save Post
     [HttpPost]
     public async Task<IActionResult> Create(CreatePostViewModel model)
@@ -76,5 +53,28 @@ public class PostController : Controller
         await _dbContext.SaveChangesAsync();
 
         return RedirectToAction("Index", "Home");
+    }
+
+    // POST: Search Movie
+    [HttpPost]
+    public async Task<IActionResult> SearchMovie(CreatePostViewModel model)
+    {
+        if (string.IsNullOrWhiteSpace(model.SearchQuery))
+            return View("Create", model);
+
+        var url = $"https://api.themoviedb.org/3/search/movie?api_key={_tmdbApiKey}&query={Uri.EscapeDataString(model.SearchQuery)}";
+        var response = await _httpClient.GetStringAsync(url);
+        var data = JObject.Parse(response);
+
+        var results = data["results"]?.Select(r => new MovieResult
+        {
+            Title = r["title"]?.ToString() ?? "",
+            PosterUrl = r["poster_path"] != null ? $"https://image.tmdb.org/t/p/w500{r["poster_path"]}" : "",
+            MovieUrl = r["id"] != null ? $"https://www.themoviedb.org/movie/{r["id"]}" : ""
+        }).ToList();
+
+        model.SearchResults = results ?? new List<MovieResult>();
+
+        return View("Create", model);
     }
 }
