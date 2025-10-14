@@ -21,11 +21,14 @@
         @foreach (var movie in Model.SearchResults)
         {
             <div class="col movie-card" style="display:none;">
-                <div class="card" style="cursor:pointer; max-width:70%;"
-                         onclick="selectMovie('@movie.Title', '@movie.PosterUrl', '@movie.MovieUrl', this)">
+                <div class="card movie-select-card" 
+                    data-title="@movie.Title" 
+                    data-poster="@movie.PosterUrl" 
+                    data-link="@movie.MovieUrl" 
+                    style="cursor:pointer; max-width:100%;">
                     <img src="@movie.PosterUrl" style="max-width:100%" class="card-img-top" />
                     <div class="card-body p-2 text-center">
-                        <small>@movie.Title</small>
+                        <medium>@movie.Title</medium>
                     </div>
                 </div>
             </div>
@@ -56,58 +59,66 @@
 </form>
 
 @section Scripts {
-    <script>
-        let selectedCard = null;
+<script>
+    let selectedCard = null;
+    let expanded = false;
 
-        function selectMovie(title, posterUrl, movieUrl, clickedElement) {
-            // Update hidden form fields
-            document.getElementById('SelectedMovieTitle').value = title;
-            document.getElementById('SelectedMoviePosterUrl').value = posterUrl;
-            document.getElementById('SelectedMovieLink').value = movieUrl;
+    const movieCards = document.querySelectorAll('.movie-card');
+    const toggleBtn = document.getElementById('toggleBtn');
 
-            // Remove highlight from previous selection
-            if (selectedCard) {
-                selectedCard.querySelector('.card-body').classList.remove('selected-movie');
-            }
+    const inputTitle = document.getElementById('SelectedMovieTitle');
+    const inputPoster = document.getElementById('SelectedMoviePosterUrl');
+    const inputLink = document.getElementById('SelectedMovieLink');
 
-            // Highlight the newly clicked card's title
-            selectedCard = clickedElement.closest('.movie-card');
-            selectedCard.querySelector('.card-body').classList.add('selected-movie');
+    function selectCard(card) {
+        if (selectedCard) {
+            selectedCard.querySelector('.card-body').classList.remove('selected-movie');
         }
+        selectedCard = card.closest('.movie-card');
+        selectedCard.querySelector('.card-body').classList.add('selected-movie');
 
-        const movieCards = document.querySelectorAll('.movie-card');
-        const toggleBtn = document.getElementById('toggleBtn');
-        let expanded = false;
+        // read from data attributes safely
+        inputTitle.value = card.dataset.title || '';
+        inputPoster.value = card.dataset.poster || '';
+        inputLink.value = card.dataset.link || '';
+    }
 
-        function getVisibleCount() {
-            if (window.innerWidth < 768) return 4; // mobile (2x2)
-            else return 12; // desktop (2x6)
-        }
-
-        function updateVisibleMovies() {
-            const visibleCount = getVisibleCount();
-            movieCards.forEach((card, index) => {
-                card.style.display = expanded || index < visibleCount ? 'block' : 'none';
-            });
-            toggleBtn.textContent = expanded ? 'Show less' : 'Show more';
-        }
-
+    // Attach event listeners after DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.movie-select-card').forEach(card => {
+            card.addEventListener('click', () => selectCard(card));
+        });
         updateVisibleMovies();
-        window.addEventListener('resize', () => { if (!expanded) updateVisibleMovies(); });
-        toggleBtn?.addEventListener('click', () => { expanded = !expanded; updateVisibleMovies(); });
-    </script>
+    });
 
-    <style>
-        .movie-card .card-body {
-            transition: background-color 0.3s, transform 0.2s;
-        }
+    function getVisibleCount() {
+        if (window.innerWidth < 768) return 4;
+        else return 12;
+    }
 
-        .movie-card .card-body.selected-movie {
-            background-color: #d4edda; /* light green */
-            border-radius: 4px;
-            transform: scale(1.03);
-        }
-    </style>
+    function updateVisibleMovies() {
+        const visibleCount = getVisibleCount();
+        movieCards.forEach((card, index) => {
+            card.style.display = expanded || index < visibleCount ? 'block' : 'none';
+        });
+        if (toggleBtn)
+            toggleBtn.textContent = expanded ? 'Show less' : 'Show more';
+    }
+
+    window.addEventListener('resize', () => { if (!expanded) updateVisibleMovies(); });
+    toggleBtn?.addEventListener('click', () => { expanded = !expanded; updateVisibleMovies(); });
+</script>
+
+<style>
+    .movie-card .card-body {
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .movie-card .card-body.selected-movie {
+        background-color: #66ee00;
+        transform: scale(1.02);
+    }
+</style>
 }
+
 
 
