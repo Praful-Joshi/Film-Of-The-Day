@@ -17,17 +17,17 @@
     {
         <h5 class="text-gray-700 font-semibold">Select a film:</h5>
 
-        <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             @foreach (var movie in Model.SearchResults)
             {
                 <div class="movie-card hidden cursor-pointer">
-                    <div class="movie-select-card border rounded overflow-hidden shadow hover:shadow-lg transition p-1"
+                    <div class="movie-select-card rounded overflow-hidden shadow hover:shadow-lg transition"
                          data-title="@movie.Title" 
                          data-poster="@movie.PosterUrl" 
                          data-link="@movie.MovieUrl">
                         <img src="@movie.PosterUrl" 
                              onerror="this.onerror=null;this.src='/images/placeholder.svg';"
-                             class="w-full h-auto object-cover" />
+                             class="w-full object-cover h-60 sm:h-60 md:h-40 lg:h-40" />
                         <div class="text-center text-sm mt-1 font-medium text-gray-800">@movie.Title</div>
                     </div>
                 </div>
@@ -73,10 +73,10 @@
 
     function selectCard(card) {
         if (selectedCard) {
-            selectedCard.querySelector('.movie-select-card').classList.remove('bg-green-100');
+            selectedCard.querySelector('.movie-select-card').classList.remove('bg-green-400');
         }
         selectedCard = card.closest('.movie-card');
-        selectedCard.querySelector('.movie-select-card').classList.add('bg-green-100');
+        selectedCard.querySelector('.movie-select-card').classList.add('bg-green-400');
 
         inputTitle.value = card.dataset.title || '';
         inputPoster.value = card.dataset.poster || '';
