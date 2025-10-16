@@ -4,15 +4,17 @@
     ViewData["Title"] = "Profile";
 }
 
-<link rel="stylesheet" href="~/css/profile.css" />
+<div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
 
-<div class="container mt-4">
-    <div class="profile-header d-flex align-items-center gap-4">
-        <img src="~/images/profile-placeholder.png" class="rounded-circle profile-pic" width="120" height="120" />
-        <div>
-            <h2>@Model.UserName</h2>
-            <p class="text-muted">@Model.Email</p>
-            <div class="d-flex gap-4 mt-2">
+    <!-- Profile Header -->
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+        <img src="~/images/profile-placeholder.png" 
+             class="rounded-full w-28 h-28 object-cover" 
+             alt="Profile Picture" />
+        <div class="flex-1">
+            <h2 class="text-2xl font-bold text-gray-800">@Model.UserName</h2>
+            <p class="text-gray-500">@Model.Email</p>
+            <div class="flex gap-6 mt-3 text-gray-700">
                 <div><strong>@Model.PostCount</strong> Posts</div>
                 <div><strong>@Model.FriendsCount</strong> Friends</div>
                 <div><strong>@Model.SavedCount</strong> Saved</div>
@@ -20,54 +22,57 @@
         </div>
     </div>
 
-    <hr />
+    <hr class="border-gray-300" />
 
-    <div class="tabs text-center">
-        <button class="tab-btn active" onclick="showTab('posts')">Posts</button>
-        <button class="tab-btn" onclick="showTab('saved')">Saved</button>
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-4 border-b border-gray-200">
+        <button class="tab-btn text-gray-600 font-medium py-2 px-4 border-b-2 border-blue-600" onclick="showTab('posts')">Posts</button>
+        <button class="tab-btn text-gray-600 font-medium py-2 px-4 border-b-2 border-transparent" onclick="showTab('saved')">Saved</button>
     </div>
 
-    <!-- Posts -->
-    <div id="posts" class="tab-content active">
-        <div class="row g-3 mt-3">
-            @if (Model.Posts.Any())
+    <!-- Posts Tab -->
+    <div id="posts" class="tab-content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+        @if (Model.Posts.Any())
+        {
+            foreach (var post in Model.Posts)
             {
-                foreach (var post in Model.Posts)
-                {
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card shadow-sm border-0"
-                             style="cursor:pointer;"
-                             onclick="window.location.href='/post/viewpost?id=@post.Id'">
-                            <img src="@post.ImageUrl"
-                                 class="card-img-top rounded" />
-                            <div class="card-body p-2">
-                                <h6 class="card-title text-center">@post.Title</h6>
-                            </div>
-                        </div>
+                <div class="cursor-pointer rounded-lg overflow-hidden shadow hover:shadow-lg transition"
+                     onclick="window.location.href='/post/viewpost?id=@post.Id'">
+                    <img src="@post.ImageUrl" class="w-full h-40 object-cover rounded-t-lg" />
+                    <div class="text-center p-2 bg-white">
+                        <h6 class="text-sm font-medium text-gray-800">@post.Title</h6>
                     </div>
-                }
+                </div>
             }
-            else
-            {
-                <p class="text-center text-muted">No posts yet.</p>
-            }
-        </div>
+        }
+        else
+        {
+            <p class="col-span-full text-center text-gray-500 mt-4">No posts yet.</p>
+        }
     </div>
 
-    <!-- Saved -->
-    <div id="saved" class="tab-content">
-        <p class="text-center text-muted mt-4">Saved posts will appear here.</p>
+    <!-- Saved Tab -->
+    <div id="saved" class="tab-content hidden text-center text-gray-500 mt-4">
+        Saved posts will appear here.
     </div>
+
 </div>
 
 @section Scripts {
 <script>
 function showTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-    document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
-    document.getElementById(tabName).classList.add('active');
+    tabButtons.forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-gray-800', 'font-bold');
+        btn.classList.add('text-gray-600');
+    });
+    tabContents.forEach(tab => tab.classList.add('hidden'));
+
+    const activeButton = Array.from(tabButtons).find(btn => btn.getAttribute('onclick').includes(tabName));
+    activeButton.classList.add('border-blue-600', 'text-gray-800', 'font-bold');
+    document.getElementById(tabName).classList.remove('hidden');
 }
 </script>
 }
