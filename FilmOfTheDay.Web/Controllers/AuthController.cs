@@ -20,7 +20,17 @@ public class AuthController : Controller
 
     // GET: /Auth/Register
     [HttpGet]
-    public IActionResult Register() => View();
+    public IActionResult Register()
+    {
+        if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else
+        {
+            return View();
+        }
+    }
 
     // POST: /Auth/Register
     [HttpPost]
@@ -56,7 +66,17 @@ public class AuthController : Controller
 
     // GET: /Auth/Login
     [HttpGet]
-    public IActionResult Login() => View();
+    public IActionResult Login()
+    {
+        if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else
+        {
+            return View();
+        }
+    }
 
     // POST: /Auth/Login
     [HttpPost]
