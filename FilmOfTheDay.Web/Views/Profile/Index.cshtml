@@ -60,19 +60,27 @@
 
 @section Scripts {
 <script>
-function showTab(tabName) {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    function showTab(tabName) {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-    tabButtons.forEach(btn => {
-        btn.classList.remove('border-blue-600', 'text-gray-800', 'font-bold');
-        btn.classList.add('text-gray-600');
-    });
-    tabContents.forEach(tab => tab.classList.add('hidden'));
+        tabButtons.forEach(btn => {
+            // Reset all buttons to inactive style
+            btn.classList.remove('border-blue-600', 'text-gray-800', 'font-bold');
+            btn.classList.add('text-gray-600', 'border-transparent');
+        });
 
-    const activeButton = Array.from(tabButtons).find(btn => btn.getAttribute('onclick').includes(tabName));
-    activeButton.classList.add('border-blue-600', 'text-gray-800', 'font-bold');
-    document.getElementById(tabName).classList.remove('hidden');
-}
+        tabContents.forEach(tab => tab.classList.add('hidden'));
+
+        // Activate the clicked button and its tab content
+        const activeButton = Array.from(tabButtons).find(btn =>
+            btn.getAttribute('onclick').includes(tabName)
+        );
+        activeButton.classList.remove('border-transparent', 'text-gray-600');
+        activeButton.classList.add('border-blue-600', 'text-gray-800', 'font-bold');
+
+        document.getElementById(tabName).classList.remove('hidden');
+    }
 </script>
+
 }
