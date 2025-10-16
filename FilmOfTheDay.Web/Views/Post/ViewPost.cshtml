@@ -3,32 +3,34 @@
     ViewData["Title"] = "View Post";
 }
 
-<div class="max-w-xl mx-auto my-10 bg-white rounded-lg shadow-md overflow-hidden">
-    <!-- Post Header -->
-    <div class="flex items-center px-4 py-2 border-b border-gray-200">
-        <a href="/Profile/@Model.UserName" class="font-bold text-gray-800 hover:underline ml-2">
+<div class="max-w-sm mx-auto my-10 bg-white rounded-lg shadow-sm overflow-hidden text-sm">
+    <!-- Header -->
+    <div class="flex items-center px-3 py-2 border-b border-gray-200">
+        <a href="/Profile/@Model.UserName" class="font-semibold text-gray-800 hover:underline">
             @Model.UserName
         </a>
     </div>
 
-    <!-- Post Image -->
+    <!-- Image -->
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
         <div class="bg-gray-50 text-center">
-            <img src="@Model.ImageUrl" alt="Post Image" class="mx-auto max-w-full max-h-[600px] object-cover" />
+            <img src="@Model.ImageUrl" alt="Post Image"
+                 class="mx-auto max-w-full max-h-[50vh] object-contain" />
         </div>
     }
 
-    <!-- Action Buttons -->
-    <div class="flex items-center px-4 py-2 space-x-4 text-xl">
-        <button class="hover:text-red-500 transition">❤️</button>
-        <button class="hover:text-blue-500 transition">💬</button>
-        <button class="ml-auto hover:text-yellow-500 transition">🔖</button>
+    <!-- Actions -->
+    <div class="flex items-center px-3 py-1 space-x-3 text-lg">
+        <button class="hover:text-red-500">❤️</button>
+        <button class="hover:text-blue-500">💬</button>
+        <button class="ml-auto hover:text-yellow-500">🔖</button>
     </div>
 
-    <!-- Post Details -->
-    <div class="px-4 py-3">
-        <p class="mb-1"><strong>@Model.UserName</strong> @Model.Description</p>
-        <div class="text-sm text-gray-500">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+    <!-- Details -->
+    <div class="px-3 py-2">
+        <p><strong>@Model.UserName</strong> @Model.Description</p>
+        <div class="text-xs text-gray-500">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
     </div>
 </div>
+
