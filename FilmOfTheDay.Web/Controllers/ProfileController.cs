@@ -26,7 +26,7 @@ namespace FilmOfTheDay.Web.Controllers
             var user = await _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == userEmail);
-                
+
             if (user == null)
                 return NotFound();
 
@@ -43,10 +43,11 @@ namespace FilmOfTheDay.Web.Controllers
                 })
                 .ToListAsync();
 
-            
+
             var viewModel = new ProfileViewModel
             {
                 UserName = user.Username,
+                UserID = user.Id,
                 Email = user.Email,
                 PostCount = posts.Count,
                 Posts = posts
@@ -54,5 +55,40 @@ namespace FilmOfTheDay.Web.Controllers
 
             return View(viewModel);
         }
+        
+        [HttpGet("Profile/{id}")]
+        public async Task<IActionResult> UserProfile(int id)
+        {
+            var user = await _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            var posts = await _dbContext.FilmPosts
+                .Where(p => p.UserId == user.Id)
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new ProfilePostViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    ImageUrl = p.ImageUrl
+                })
+                .ToListAsync();
+
+            var viewModel = new ProfileViewModel
+            {
+                UserName = user.Username,
+                UserID = user.Id,
+                Email = user.Email,
+                PostCount = posts.Count,
+                Posts = posts
+            };
+
+            return View("UserProfile", viewModel); // reuse same Profile/Index view
+        }
+
     }
 }
