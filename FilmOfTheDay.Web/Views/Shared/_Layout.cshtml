@@ -23,37 +23,36 @@
                     FilmOfTheDay
                 </a>
 
-                <!-- Search bar (hidden on mobile, visible on md and up) -->
-                <form asp-controller="Search" asp-action="Index" method="get"
-                    class="flex items-center flex-1 mx-1 sm:mx-4 relative
-                            max-w-[160px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px]">
-                    <input type="text" name="query" placeholder="Search users..."
-                        class="w-full border border-gray-300 rounded-full py-2 pl-4 pr-10
-                                text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        autocomplete="off" />
-                    <button type="submit"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-search text-lg"></i>
-                    </button>
-                </form>
-
-
-
-                <!-- Mobile menu button -->
-                <button id="nav-toggle"
-                        class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="bi bi-list text-3xl"></i>
-                </button>
-
-                <!-- Desktop Menu -->
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
+                    <!-- Search bar (hidden on mobile, visible on md and up) -->
+                    <form asp-controller="Search" asp-action="Index" method="get"
+                        class="flex items-center flex-1 mx-1 sm:mx-4 relative
+                                max-w-[160px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px]">
+                        <input type="text" name="query" placeholder="Search users..."
+                            value="@Context.Request.Query["query"]"
+                            class="w-full border border-gray-300 rounded-full py-2 pl-4 pr-10
+                                    text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            autocomplete="off" />
+                        <button type="submit"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                            <i class="bi bi-search text-lg"></i>
+                        </button>
+                    </form>
+
+                    <!-- Mobile menu button -->
+                    <button id="nav-toggle"
+                            class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="bi bi-list text-3xl"></i>
+                    </button>
+
+                    <!-- Desktop Menu -->
                     <div class="hidden md:flex items-center space-x-4">
                         <a asp-controller="Profile" asp-action="Index" class="px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
                         <a asp-controller="Home" asp-action="Privacy" class="px-3 py-2 rounded hover:bg-gray-100 transition">Privacy</a>
                         <a asp-controller="Auth" asp-action="Logout" class="px-3 py-2 rounded hover:bg-gray-100 transition">Logout</a>
                     </div>
-                }
+                } 
             </div>
 
 
