@@ -17,24 +17,41 @@
     <header class="bg-white shadow-md">
         <nav class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                
+
                 <!-- Brand -->
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="text-xl font-bold text-gray-800">
                     FilmOfTheDay
                 </a>
 
-                <!-- Authenticated Links -->
+                <!-- Mobile menu button -->
+                <button id="nav-toggle"
+                        class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="bi bi-list text-3xl"></i>
+                </button>
+
+                <!-- Desktop Menu -->
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
-                    <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4">
                         <a asp-controller="Profile" asp-action="Index" class="px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
                         <a asp-controller="Home" asp-action="Privacy" class="px-3 py-2 rounded hover:bg-gray-100 transition">Privacy</a>
                         <a asp-controller="Auth" asp-action="Logout" class="px-3 py-2 rounded hover:bg-gray-100 transition">Logout</a>
                     </div>
                 }
             </div>
+
+            <!-- Mobile Menu -->
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <div id="nav-menu" class="hidden md:hidden flex items-center flex-col pb-3">
+                    <a asp-controller="Profile" asp-action="Index" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Privacy</a>
+                    <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Logout</a>
+                </div>
+            }
         </nav>
     </header>
+
 
     <!-- Main Content -->
     <main class="max-w-8xl">
@@ -52,5 +69,15 @@
     }
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const toggleButton = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        toggleButton?.addEventListener('click', () => {
+            navMenu.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
 </html>
