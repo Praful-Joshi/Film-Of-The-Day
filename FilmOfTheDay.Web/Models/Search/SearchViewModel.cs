@@ -2,7 +2,6 @@ namespace FilmOfTheDay.Web.Models.Search;
 
 public class SearchViewModel
 {
-    public string Query { get; set; } = "";
     public List<SearchedUserViewModel> Users { get; set; } = new();
 }
 
