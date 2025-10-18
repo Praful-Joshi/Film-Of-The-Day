@@ -50,9 +50,10 @@ namespace FilmOfTheDay.Infrastructure.Data
                     .OnDelete(DeleteBehavior.Cascade); // Only one cascade path allowed
             });
         }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; } = null!;
         public DbSet<FilmPost> FilmPosts { get; set; } = null!;
         public DbSet<Friendship> Friendships { get; set; } = null!;
         public DbSet<UserWatchlist> UserWatchlists { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
     }
 }

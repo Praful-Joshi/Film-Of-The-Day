@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using FilmOfTheDay.Infrastructure.Data;
+using FilmOfTheDay.Web.Services.Interfaces;
+using FilmOfTheDay.Web.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Auth/Login";
         options.LogoutPath = "/Auth/Logout";
     });
+
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 var app = builder.Build();
 //seed data
 // using (var scope = app.Services.CreateScope())
