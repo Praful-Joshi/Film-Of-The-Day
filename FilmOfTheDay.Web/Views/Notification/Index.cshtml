@@ -3,9 +3,61 @@
 @{
     ViewData["Title"] = "Notifications";
 }
-@if(Model.Notifications == null || !Model.Notifications.Any())
-{
-    <div class="max-w-3xl mx-auto px-4 py-8">
-        <p class="flex justify-center text-gray-500">No new notifications.</p>
-    </div>
-}
+
+<div class="max-w-2xl mx-auto px-4 py-6">
+    <!-- Empty State -->
+    @if (Model.Notifications == null || !Model.Notifications.Any())
+    {
+        <div class="flex flex-col items-center justify-center py-16 text-gray-500">
+            <p>No new notifications.</p>
+        </div>
+    }
+    else
+    {
+        <ul class="divide-y divide-gray-200 bg-white rounded-xl shadow-sm">
+            @foreach (var notif in Model.Notifications)
+            {
+                <li class="flex items-center justify-between p-4 hover:bg-gray-50 transition">
+
+                    <!-- Left side: Avatar + message -->
+                    <div class="flex items-center space-x-3">
+                        <!-- User avatar -->
+                        <img src="@(notif.SenderImageUrl ?? "~/images/profile-placeholder.png")"
+                             alt="@notif.SenderName"
+                             class="w-10 h-10 rounded-full object-cover" />
+
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-800">
+                                <span class="font-semibold">@notif.SenderName</span>
+                                @notif.Message
+                            </span>
+
+                            <span class="text-xs text-gray-500">
+                                @notif.CreatedAt.ToLocalTime().ToString("MMM d, h:mm tt")
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right side: Optional link or action -->
+                    @if (!string.IsNullOrEmpty(notif.Link))
+                    {
+                        <a href="@notif.Link"
+                           class="text-blue-600 text-sm hover:underline whitespace-nowrap">
+                            View
+                        </a>
+                    }
+                    else if (!notif.IsRead)
+                    {
+                        <form asp-action="MarkAsRead" method="post" class="inline">
+                            <input type="hidden" name="id" value="@notif.Id" />
+                            <button type="submit"
+                                    class="text-xs text-gray-500 hover:text-blue-600">
+                                Mark read
+                            </button>
+                        </form>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>

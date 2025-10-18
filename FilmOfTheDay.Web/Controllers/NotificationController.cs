@@ -28,7 +28,9 @@ public class NotificationController : Controller
                 Id = n.Id,
                 Message = n.Message,
                 CreatedAt = n.CreatedAt,
-                IsRead = n.IsRead
+                IsRead = n.IsRead,
+                Link = n.Link,
+                SenderName = "SenderName"
             }).ToList()
         };
         return View(model);

@@ -11,4 +11,7 @@ public class NotificationItemViewModel
     public string Message { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public bool IsRead { get; set; }
+    public string? SenderImageUrl { get; set; }
+    public string? Link { get; set; }
+    public string? SenderName { get; set; }
 }
