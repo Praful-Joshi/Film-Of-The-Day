@@ -18,7 +18,7 @@
             {
                 <li class="flex items-center p-4 hover:bg-gray-50 transition">
                     <img src="@user.ProfileImageUrl" alt="@user.UserName" class="w-10 h-10 rounded-full mr-3" />
-                    <a asp-controller="Profile" asp-action="UserProfile" asp-route-id="@user.UserID" class="font-medium text-gray-800 hover:text-blue-600">
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@user.UserID" class="font-medium text-gray-800 hover:text-blue-600">
                         @user.UserName
                     </a>
                 </li>

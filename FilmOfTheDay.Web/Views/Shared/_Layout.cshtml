@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
+@{
+    var ownerID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +28,7 @@
 
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
-                    <!-- Search bar (hidden on mobile, visible on md and up) -->
+                    <!-- Search bar -->
                     <form asp-controller="Search" asp-action="Index" method="get"
                         class="flex items-center flex-1 mx-1 sm:mx-4 relative
                                 max-w-[160px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px]">
@@ -48,7 +51,7 @@
 
                     <!-- Desktop Menu -->
                     <div class="hidden md:flex items-center space-x-4">
-                        <a asp-controller="Profile" asp-action="Index" class="px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
+                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
                         <a asp-controller="Home" asp-action="Privacy" class="px-3 py-2 rounded hover:bg-gray-100 transition">Privacy</a>
                         <a asp-controller="Auth" asp-action="Logout" class="px-3 py-2 rounded hover:bg-gray-100 transition">Logout</a>
                     </div>
@@ -60,7 +63,7 @@
             @if (User?.Identity?.IsAuthenticated ?? false)
             {
                 <div id="nav-menu" class="hidden md:hidden flex items-center flex-col pb-3">
-                    <a asp-controller="Profile" asp-action="Index" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Profile</a>
                     <a asp-controller="Home" asp-action="Privacy" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Privacy</a>
                     <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 rounded hover:bg-gray-100 transition">Logout</a>
                 </div>
