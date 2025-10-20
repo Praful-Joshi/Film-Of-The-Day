@@ -18,6 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IConnectionService, ConnectionService>();
 
 var app = builder.Build();
 //seed data
