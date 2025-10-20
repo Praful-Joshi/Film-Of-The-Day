@@ -8,8 +8,8 @@
     <!-- Empty State -->
     @if (Model.Notifications == null || !Model.Notifications.Any())
     {
-        <div class="flex flex-col items-center justify-center py-16 text-gray-500">
-            <p>No new notifications.</p>
+        <div class="max-w-3xl mx-auto">
+            <p class="flex justify-center text-gray-500">No new notifications.</p>
         </div>
     }
     else
