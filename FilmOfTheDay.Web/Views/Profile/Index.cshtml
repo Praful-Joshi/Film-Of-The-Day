@@ -1,5 +1,6 @@
 @model FilmOfTheDay.Web.Models.Profile.ProfileViewModel
 @using System.Security.Claims
+@using FilmOfTheDay.Web.Services.Implementations;
 
 @{
     ViewData["Title"] = "Profile";
@@ -30,15 +31,33 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="receiverId" value="@Model.UserID" />
 
+                        @{
+                            var buttonText = "Follow";
+                            var buttonClass = "bg-blue-500 hover:bg-blue-600";
+                            var disabled = "";
+
+                            switch (Model.friendshipState)
+                            {
+                                case FriendshipState.Pending:
+                                    buttonText = "Requested";
+                                    disabled = "disabled";
+                                    break;
+                                case FriendshipState.Friends:
+                                    buttonText = "Friends";
+                                    disabled = "disabled";
+                                    break;
+                            }
+                        }
+
                         <button type="submit"
                                 id="followBtn"
-                                class="px-3 mb-1 py-1.5 text-sm font-semibold text-white bg-blue-500 rounded-full shadow-sm 
-                                    hover:bg-blue-600 active:scale-95 transition-transform duration-150">
-                            Follow
+                                class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
+                                @disabled>
+                            @buttonText
                         </button>
                     </form>
-
                 }
+
             </div>
 
             <p class="text-gray-500">@Model.Email</p>

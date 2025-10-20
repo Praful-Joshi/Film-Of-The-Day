@@ -18,11 +18,10 @@ public class ConnectionController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult SendRequest(int receiverId)
     {
-        var senderId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        if (receiverId == senderId)
+        var senderIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(senderIdValue) || !int.TryParse(senderIdValue, out var senderId))
         {
-            return BadRequest("You cannot send a request to yourself.");
+            return Unauthorized();
         }
         
         // Your friend request creation logic here

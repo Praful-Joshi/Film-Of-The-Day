@@ -3,17 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
-
+using FilmOfTheDay.Web.Services.Interfaces;
+using System.Security.Claims;
 namespace FilmOfTheDay.Web.Controllers
 {
     [Authorize] // ensures only logged-in users can access profile
     public class ProfileController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IConnectionService _connectionService;
 
-        public ProfileController(ApplicationDbContext dbContext)
+        public ProfileController(ApplicationDbContext dbContext, IConnectionService connectionService)
         {
             _dbContext = dbContext;
+            _connectionService = connectionService;
         }
 
         [HttpGet]
@@ -27,6 +30,17 @@ namespace FilmOfTheDay.Web.Controllers
             if (user == null)
                 return NotFound();
 
+            // get the logged-in user's id from claims and validate it
+            var loggedInUserIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(loggedInUserIdStr) || !int.TryParse(loggedInUserIdStr, out var loggedInUserId))
+            {
+                return Unauthorized();
+            }
+
+            // Determine relationship
+            var friendshipState = _connectionService.GetFriendshipState(loggedInUserId, id);
+
+            //get the user's posts and convert them to list of ProfilePostViewModels
             //get the user's posts and convert them to list of ProfilePostViewModels
             var posts = await _dbContext.FilmPosts
                 .Where(p => p.UserId == user.Id)
@@ -47,7 +61,8 @@ namespace FilmOfTheDay.Web.Controllers
                 UserID = user.Id,
                 Email = user.Email,
                 PostCount = posts.Count,
-                Posts = posts
+                Posts = posts,
+                friendshipState = friendshipState
             };
 
             return View(viewModel);

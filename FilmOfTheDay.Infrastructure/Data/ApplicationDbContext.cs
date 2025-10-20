@@ -18,14 +18,18 @@ namespace FilmOfTheDay.Infrastructure.Data
             {
                 entity.HasOne(f => f.User)
                     .WithMany()
-                    .HasForeignKey(f => f.UserId)
+                    .HasForeignKey(f => f.SenderId)
                     .OnDelete(DeleteBehavior.NoAction);
 
                 entity.HasOne(f => f.Friend)
                     .WithMany()
-                    .HasForeignKey(f => f.FriendId)
+                    .HasForeignKey(f => f.ReceiverId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
+
+            modelBuilder.Entity<Friendship>()
+            .HasIndex(f => new { f.SenderId, f.ReceiverId })
+            .IsUnique(); // prevent duplicate requests
 
             // UserWatchlist
             modelBuilder.Entity<UserWatchlist>(entity =>
