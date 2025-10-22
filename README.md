@@ -1,71 +1,57 @@
 # 🎬 Film of the Day
 
-A social platform for film enthusiasts to share and discover their daily movie picks. Built with ASP.NET Core MVC and Entity Framework Core.
+A compact social app for film lovers — share daily picks, discover friends' posts and browse an Instagram-like home feed. The project is built with ASP.NET Core MVC and EF Core using Clean Architecture.
 
-## 🌟 Features
+## Implemented (current) features
 
-- **User Authentication**: Secure login and registration system
-- **Movie Search**: Search and select movies from a vast database
-- **Daily Posts**: Share your film of the day with descriptions and images
-- **User Profiles**: View user profiles and their film posts
-- **Responsive Design**: Works seamlessly on both desktop and mobile devices
+- User registration, login and cookie-based authentication
+- Create and view film posts (image + description + date)
+- Profile pages showing a user's posts
+- Follow / connection requests (send / accept)
+- Notifications plumbing (service + controller) for basic alerts
+- Search page (query UI) and a vertical home feed that shows your and friends' posts sorted by newest
+- Responsive UI using Tailwind utility classes (with some Bootstrap assets)
 
-## 🛠️ Tech Stack
+## Tech
 
-- **Backend**: ASP.NET Core 8.0
-- **Database**: Entity Framework Core with SQL Server
-- **Frontend**: 
-  - Razor Views for server-side rendering of HTML pages
-  - Tailwind CSS for styling
-- **Authentication**: Custom authentication using BCrypt for password hashing and browser-cookies based authorization
+- .NET 8 (ASP.NET Core MVC)
+- Entity Framework Core (SQL Server by default)
+- Tailwind CSS for utilities; minimal JS for interactivity
 
-## 🚀 Project Structure
+## Quick start
 
-```
-FilmOfTheDay/
-├── FilmOfTheDay.Core/           # Domain entities and interfaces
-├── FilmOfTheDay.Infrastructure/ # Data access and database context
-└── FilmOfTheDay.Web/           # Web application and UI
-```
-
-## 📋 Prerequisites
-
-- .NET 8.0 SDK
-- SQL Server
-- Node.js (for frontend asset management)
-
-## ⚙️ Setup Instructions
-
-1. Clone the repository:
+1. Clone and enter the repo
    ```bash
-   git clone https://github.com/Praful-Joshi/Film-Of-The-Day.git
+   git clone <repo-url>
    cd Film-Of-The-Day
    ```
-
-2. Update the database connection string in `FilmOfTheDay.Web/appsettings.json`
-
-3. Apply database migrations:
+2. Update the connection string in `FilmOfTheDay.Web/appsettings.json`.
+3. Apply migrations and seed (dev):
    ```bash
    dotnet ef database update --project FilmOfTheDay.Infrastructure --startup-project FilmOfTheDay.Web
    ```
-
-4. Run the application:
+4. (Optional) Rebuild Tailwind if you edit styles:
+   ```bash
+   npx tailwindcss -i ./FilmOfTheDay.Web/wwwroot/css/input.css -o ./FilmOfTheDay.Web/wwwroot/css/site.css --minify
+   ```
+5. Run the web app:
    ```bash
    dotnet run --project FilmOfTheDay.Web
    ```
 
-## 🎯 Future Enhancements
+## Dev notes
 
-- Friend system for following other users
-- Comments and reactions on posts
-- Personal watchlist management
-- Movie recommendations based on user preferences
-- Advanced search filters
+- When you reset the DB, clear browser cookies or sign out — auth cookies are independent of DB state.
+- Follow/connection endpoints are AJAX-friendly and expect antiforgery tokens for POSTs.
+- Home feed service aggregates posts from the current user + accepted friends.
 
-## 📄 License
+## Project layout
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
+FilmOfTheDay/
+├─ FilmOfTheDay.Core/             # Entities
+├─ FilmOfTheDay.Infrastructure/   # DbContext, Migrations, seeders
+└─ FilmOfTheDay.Web/              # Controllers, Views, Services, Assets
+```
 
-## 👤 Author
 
-[Praful Joshi](https://github.com/Praful-Joshi)
