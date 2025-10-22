@@ -1,0 +1,28 @@
+@model FilmOfTheDay.Web.Models.Search.SearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6 text-center">Search Results</h1>
+
+    @if (!Model.Users.Any())
+    {
+        <p class="flex justify-center text-gray-500">No users found.</p>
+    }
+    else
+    {
+        <ul class="divide-y divide-gray-200 bg-white rounded-xl shadow-sm">
+            @foreach (var user in Model.Users)
+            {
+                <li class="flex items-center p-4 hover:bg-gray-50 transition">
+                    <img src="@user.ProfileImageUrl" alt="@user.UserName" class="w-10 h-10 rounded-full mr-3" />
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@user.UserID" class="font-medium text-gray-800 hover:text-blue-600">
+                        @user.UserName
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</div>

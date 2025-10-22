@@ -9,17 +9,27 @@ namespace FilmOfTheDay.Core.Entities
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int SenderId { get; set; }
 
-        [ForeignKey("UserId")]
+        [ForeignKey("SenderId")]
         public User User { get; set; } = null!;
 
         [Required]
-        public int FriendId { get; set; }
+        public int ReceiverId { get; set; }
 
-        [ForeignKey("FriendId")]
+        [ForeignKey("ReceiverId")]
         public User Friend { get; set; } = null!;
 
+        [Required]
+        public FriendshipStatus Status { get; set; } = FriendshipStatus.Pending;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    public enum FriendshipStatus
+    {
+        Pending,
+        Accepted,
+        Rejected
     }
 }
