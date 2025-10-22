@@ -1,8 +1,52 @@
-﻿@{
+﻿@model FilmOfTheDay.Web.Models.Home.HomeFeedViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 py-12">
-    <h1 class="text-3xl font-bold mb-4 text-gray-800">Home Feed</h1>
-    <p class="text-gray-600">Film posts will go here.</p>
+<div class="min-h-screen bg-gray-50 py-8 px-2 sm:px-0">
+    <div class="max-w-xl mx-auto">
+        @if (Model.FeedItems != null && Model.FeedItems.Any())
+        {
+            foreach (var post in Model.FeedItems)
+            {
+                <div class="bg-white mx-auto max-w-sm rounded-lg shadow-sm overflow-hidden mb-8">
+                    <!-- Header -->
+                    <div class="flex items-center px-3 py-2 border-b border-gray-200">
+                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@post.UserID" class="font-semibold text-gray-800 hover:underline">
+                            @post.UserName
+                        </a>
+                    </div>
+
+                    <!-- Image -->
+                    @if (!string.IsNullOrEmpty(post.ImageUrl))
+                    {
+                        <div class="bg-gray-50 text-center">
+                            <img src="@post.ImageUrl" alt="Post Image"
+                                 class="mx-auto max-w-full max-h-[50vh] object-contain" />
+                        </div>
+                    }
+
+                    <!-- Actions -->
+                    <div class="flex items-center px-3 py-1 space-x-3 text-lg">
+                        <button class="hover:text-red-500">❤️</button>
+                        <button class="hover:text-blue-500">💬</button>
+                        <button class="ml-auto hover:text-yellow-500">🔖</button>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="px-3 py-2">
+                        <p><strong>@post.UserName</strong> @post.Description</p>
+                        <div class="text-xs text-gray-500">@post.CreatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center text-gray-500 mt-12">No posts to show yet. Start following friends or create your first post!</div>
+        }
+    </div>
 </div>
+
+
