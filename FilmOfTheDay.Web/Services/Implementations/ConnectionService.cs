@@ -93,6 +93,13 @@ public class ConnectionService : IConnectionService
 
         return FriendshipState.None;
     }
+
+    public int GetFriendsCount(int userId)
+    {
+        return _dbContext.Friendships.Count(f =>
+            (f.SenderId == userId || f.ReceiverId == userId) &&
+            f.Status == FriendshipStatus.Accepted);
+    }
 }
 
 public enum FriendshipState

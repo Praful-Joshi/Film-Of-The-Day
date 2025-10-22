@@ -39,8 +39,8 @@ namespace FilmOfTheDay.Web.Controllers
 
             // Determine relationship
             var friendshipState = _connectionService.GetFriendshipState(loggedInUserId, id);
+            int friendsCount = _connectionService.GetFriendsCount(id);
 
-            //get the user's posts and convert them to list of ProfilePostViewModels
             //get the user's posts and convert them to list of ProfilePostViewModels
             var posts = await _dbContext.FilmPosts
                 .Where(p => p.UserId == user.Id)
@@ -61,6 +61,7 @@ namespace FilmOfTheDay.Web.Controllers
                 UserID = user.Id,
                 Email = user.Email,
                 PostCount = posts.Count,
+                FriendsCount = friendsCount,
                 Posts = posts,
                 friendshipState = friendshipState
             };
