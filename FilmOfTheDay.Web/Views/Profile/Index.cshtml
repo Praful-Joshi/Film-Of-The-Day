@@ -32,29 +32,47 @@
                         <input type="hidden" name="receiverId" value="@Model.UserID" />
 
                         @{
-                            var buttonText = "Follow";
-                            var buttonClass = "bg-blue-500 hover:bg-blue-600";
-                            var disabled = "";
+                                var buttonText = "Add Friend";
+                                var buttonClass = "bg-blue-500 hover:bg-blue-600";
+                                var disabled = "";
+                                var isAcceptAction = false; // whether button should call AcceptRequest
 
-                            switch (Model.friendshipState)
-                            {
-                                case FriendshipState.Pending:
-                                    buttonText = "Requested";
-                                    disabled = "disabled";
-                                    break;
-                                case FriendshipState.Friends:
-                                    buttonText = "Friends";
-                                    disabled = "disabled";
-                                    break;
-                            }
+                                switch (Model.friendshipState)
+                                {
+                                    case FriendshipState.RequestSent:
+                                        buttonText = "Requested";
+                                        disabled = "disabled";
+                                        break;
+                                    case FriendshipState.Friends:
+                                        buttonText = "Friends";
+                                        disabled = "disabled";
+                                        break;
+                                    case FriendshipState.RequestReceived:
+                                        buttonText = "Accept Request";
+                                        buttonClass = "bg-green-600 hover:bg-green-700";
+                                        isAcceptAction = true;
+                                        break;
+                                }
                         }
 
-                        <button type="submit"
-                                id="followBtn"
-                                class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
-                                @disabled>
-                            @buttonText
-                        </button>
+                        @if (isAcceptAction)
+                        {
+                            <button type="button"
+                                    id="followBtn"
+                                    data-receiver="@Model.UserID"
+                                    class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
+                                @buttonText
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit"
+                                    id="followBtn"
+                                    class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
+                                    @disabled>
+                                @buttonText
+                            </button>
+                        }
                     </form>
                 }
 
@@ -141,6 +159,44 @@
         const followBtn = document.getElementById("followBtn");
 
         if (followForm && followBtn) {
+            // If the button is a plain button (Accept Request), handle click separately
+            if (followBtn.type === 'button') {
+                followBtn.addEventListener('click', async function () {
+                    const senderId = followBtn.getAttribute('data-receiver'); // the profile user sent the request
+                    const receiverId = '@loggedInUserId'; // current user
+
+                    followBtn.disabled = true;
+                    followBtn.textContent = 'Accepting...';
+
+                    try {
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        const res = await fetch('/Connection/AcceptRequest', {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': token || ''
+                            },
+                            body: JSON.stringify({ senderId: parseInt(senderId), receiverId: parseInt(receiverId) })
+                        });
+
+                        if (res.ok) {
+                            followBtn.textContent = 'Friends';
+                            followBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                            followBtn.classList.add('bg-gray-400');
+                        } else {
+                            followBtn.textContent = 'Error';
+                            followBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        console.error('Accept request failed:', err);
+                        followBtn.textContent = 'Try Again';
+                        followBtn.disabled = false;
+                    }
+                });
+            }
+
+            // Handle regular follow form submit (sending a request)
             followForm.addEventListener("submit", async function (e) {
                 e.preventDefault();
 
@@ -163,10 +219,7 @@
                     });
 
                     if (response.ok) {
-                        // You can parse response JSON if needed
                         followBtn.textContent = "Requested";
-                        @* followBtn.classList.remove("bg-blue-500", "hover:bg-blue-600");
-                        followBtn.classList.add("bg-gray-400", "cursor-default"); *@
                     } else {
                         followBtn.textContent = "Error";
                         followBtn.disabled = false;

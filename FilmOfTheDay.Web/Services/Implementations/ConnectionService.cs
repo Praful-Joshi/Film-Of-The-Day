@@ -7,10 +7,12 @@ namespace FilmOfTheDay.Web.Services.Implementations;
 public class ConnectionService : IConnectionService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly INotificationService _notifService;
 
-    public ConnectionService(ApplicationDbContext dbContext)
+    public ConnectionService(ApplicationDbContext dbContext, INotificationService notifService)
     {
         _dbContext = dbContext;
+        _notifService = notifService;
     }
 
     public void SendRequest(int senderId, int receiverId)
@@ -31,6 +33,7 @@ public class ConnectionService : IConnectionService
 
         _dbContext.Friendships.Add(friendship);
         _dbContext.SaveChanges();
+        _notifService.CreateNotificationAsync(receiverId, NotificationType.NewFollower, "You have a new friend request.", null).Wait();
     }
     public bool AreFriends(int userId1, int userId2)
     {
@@ -60,27 +63,43 @@ public class ConnectionService : IConnectionService
 
     public FriendshipState GetFriendshipState(int userId, int profileUserId)
     {
-        var friendship = _dbContext.Friendships
-            .FirstOrDefault(f =>
-                (f.SenderId == userId && f.ReceiverId == profileUserId) ||
-                (f.SenderId == profileUserId && f.ReceiverId == userId));
+        // Check if the current user sent a request to the profile user
+        var sent = _dbContext.Friendships
+            .FirstOrDefault(f => f.SenderId == userId && f.ReceiverId == profileUserId);
 
-        if (friendship == null)
-            return FriendshipState.None;
-
-        return friendship.Status switch
+        if (sent != null)
         {
-            FriendshipStatus.Pending => FriendshipState.Pending,
-            FriendshipStatus.Accepted => FriendshipState.Friends,
-            _ => FriendshipState.None
-        };
+            return sent.Status switch
+            {
+                FriendshipStatus.Pending => FriendshipState.RequestSent,
+                FriendshipStatus.Accepted => FriendshipState.Friends,
+                _ => FriendshipState.None
+            };
+        }
+
+        // Check if the profile user sent a request to the current user
+        var received = _dbContext.Friendships
+            .FirstOrDefault(f => f.SenderId == profileUserId && f.ReceiverId == userId);
+
+        if (received != null)
+        {
+            return received.Status switch
+            {
+                FriendshipStatus.Pending => FriendshipState.RequestReceived,
+                FriendshipStatus.Accepted => FriendshipState.Friends,
+                _ => FriendshipState.None
+            };
+        }
+
+        return FriendshipState.None;
     }
 }
 
 public enum FriendshipState
 {
     None,
-    Pending,
+    RequestSent,
+    RequestReceived,
     Friends
 }
 

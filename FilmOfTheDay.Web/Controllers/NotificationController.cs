@@ -19,7 +19,11 @@ public class NotificationController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
+        {
+            return Unauthorized();
+        }
         var notifications = await _notificationService.GetUserNotificationsAsync(userId);
         var model = new NotificationViewModel
         {
@@ -30,7 +34,9 @@ public class NotificationController : Controller
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead,
                 Link = n.Link,
-                SenderName = "SenderName"
+                SenderName = "",
+                SenderImageUrl = "/images/profile-placeholder.png"
+
             }).ToList()
         };
         return View(model);
