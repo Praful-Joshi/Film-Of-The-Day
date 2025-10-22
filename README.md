@@ -1,6 +1,6 @@
 # 🎬 Film of the Day
 
-A compact social app for film lovers — share daily picks, discover friends' posts and browse an Instagram-like home feed. The project is built with ASP.NET Core MVC and EF Core using Clean Architecture.
+A social media app for film lovers — share daily picks, discover friends' posts and browse an Instagram-like home feed. The project is built with ASP.NET Core MVC and EF Core using Clean Architecture.
 
 ## Implemented (current) features
 
