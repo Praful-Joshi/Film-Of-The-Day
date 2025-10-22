@@ -163,7 +163,6 @@
             if (followBtn.type === 'button') {
                 followBtn.addEventListener('click', async function () {
                     const senderId = followBtn.getAttribute('data-receiver'); // the profile user sent the request
-                    const receiverId = '@loggedInUserId'; // current user
 
                     followBtn.disabled = true;
                     followBtn.textContent = 'Accepting...';
@@ -177,13 +176,11 @@
                                 'Content-Type': 'application/json',
                                 'RequestVerificationToken': token || ''
                             },
-                            body: JSON.stringify({ senderId: parseInt(senderId), receiverId: parseInt(receiverId) })
+                            body: JSON.stringify({ senderId: parseInt(senderId) })
                         });
 
                         if (res.ok) {
                             followBtn.textContent = 'Friends';
-                            followBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                            followBtn.classList.add('bg-gray-400');
                         } else {
                             followBtn.textContent = 'Error';
                             followBtn.disabled = false;
