@@ -33,6 +33,13 @@ builder.Services.AddScoped<IConnectionService, ConnectionService>();
 builder.Services.AddScoped<IHomeFeedService, HomeFeedService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate(); // Apply migrations (safe to call even if already applied)
+}
+
 //seed data
 // using (var scope = app.Services.CreateScope())
 // {
