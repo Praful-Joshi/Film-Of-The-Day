@@ -485,3 +485,5 @@ $RECYCLE.BIN/
 FilmOfTheDay.Web/appsettings.json
 .vscode
 prompt.txt
+FilmOfTheDay.Web/appsettings.Development.json
+FilmOfTheDay.Web/appsettings.Production.json
