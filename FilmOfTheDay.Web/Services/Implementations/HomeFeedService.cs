@@ -3,8 +3,8 @@ using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Home;
 using FilmOfTheDay.Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-namespace FilmOfTheDay.Web.Services.Implementations;
 
+namespace FilmOfTheDay.Web.Services.Implementations;
 public class HomeFeedService : IHomeFeedService
 {
     private readonly ApplicationDbContext _dbContext;

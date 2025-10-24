@@ -4,7 +4,6 @@ using FilmOfTheDay.Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
-
 public class NotificationService : INotificationService
 {
     private readonly ApplicationDbContext _db;

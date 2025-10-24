@@ -3,7 +3,6 @@ using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Services.Interfaces;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
-
 public class ConnectionService : IConnectionService
 {
     private readonly ApplicationDbContext _dbContext;
