@@ -8,19 +8,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+var env = builder.Environment.EnvironmentName;
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (connectionString.Contains("Host="))
+
+if (env == "Development")
 {
-    // For production (Azure Database for PostgreSQL)
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+    //print env to console
+    Console.WriteLine("Environment: Development");
+    builder.Services.AddDbContext<SqlServerApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+    builder.Services.AddScoped<ApplicationDbContext, SqlServerApplicationDbContext>();
 }
 else
 {
-    // For development (Local SQL Server)
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+    //print env to console
+    Console.WriteLine("Environment: Production");
+    builder.Services.AddDbContext<PostgresApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
+    builder.Services.AddScoped<ApplicationDbContext, PostgresApplicationDbContext>();
 }
+
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -34,11 +42,11 @@ builder.Services.AddScoped<IHomeFeedService, HomeFeedService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate(); // Apply migrations (safe to call even if already applied)
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//     db.Database.Migrate(); // Apply migrations (safe to call even if already applied)
+// }
 
 //seed data
 // using (var scope = app.Services.CreateScope())

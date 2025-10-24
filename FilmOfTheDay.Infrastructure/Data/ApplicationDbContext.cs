@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FilmOfTheDay.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
-    {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
 
-        }
+    public abstract class ApplicationDbContext : DbContext
+    {
+        protected ApplicationDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -28,8 +26,8 @@ namespace FilmOfTheDay.Infrastructure.Data
             });
 
             modelBuilder.Entity<Friendship>()
-            .HasIndex(f => new { f.SenderId, f.ReceiverId })
-            .IsUnique(); // prevent duplicate requests
+                .HasIndex(f => new { f.SenderId, f.ReceiverId })
+                .IsUnique();
 
             // UserWatchlist
             modelBuilder.Entity<UserWatchlist>(entity =>
@@ -45,19 +43,43 @@ namespace FilmOfTheDay.Infrastructure.Data
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
-            // FilmPosts (if you still want cascade delete from User → FilmPosts)
+            // FilmPosts
             modelBuilder.Entity<FilmPost>(entity =>
             {
                 entity.HasOne(fp => fp.User)
                     .WithMany()
                     .HasForeignKey(fp => fp.UserId)
-                    .OnDelete(DeleteBehavior.Cascade); // Only one cascade path allowed
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
+
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<FilmPost> FilmPosts { get; set; } = null!;
         public DbSet<Friendship> Friendships { get; set; } = null!;
         public DbSet<UserWatchlist> UserWatchlists { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
+    }
+
+    public abstract class ApplicationDbContext<TContext> : ApplicationDbContext where TContext : DbContext
+    {
+        protected ApplicationDbContext(DbContextOptions<TContext> options) : base(options)
+        {
+        }
+    }
+
+    public class SqlServerApplicationDbContext : ApplicationDbContext<SqlServerApplicationDbContext>
+    {
+        public SqlServerApplicationDbContext(DbContextOptions<SqlServerApplicationDbContext> options)
+            : base(options)
+        {
+        }
+    }
+
+    public class PostgresApplicationDbContext : ApplicationDbContext<PostgresApplicationDbContext>
+    {
+        public PostgresApplicationDbContext(DbContextOptions<PostgresApplicationDbContext> options)
+            : base(options)
+        {
+        }
     }
 }
