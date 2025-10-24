@@ -43,7 +43,7 @@ builder.Services.AddScoped<IHomeFeedService, HomeFeedService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-
+builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddHttpContextAccessor();
 
 
