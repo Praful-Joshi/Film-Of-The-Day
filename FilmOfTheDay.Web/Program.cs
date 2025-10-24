@@ -42,11 +42,21 @@ builder.Services.AddScoped<IHomeFeedService, HomeFeedService>();
 
 var app = builder.Build();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-//     db.Database.Migrate(); // Apply migrations (safe to call even if already applied)
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    if (env == "Development")
+    {
+        var devDb = services.GetRequiredService<SqlServerApplicationDbContext>();
+        devDb.Database.Migrate(); // applies pending migrations to local dev DB
+    }
+    else
+    {
+        var prodDb = services.GetRequiredService<PostgresApplicationDbContext>();
+        prodDb.Database.Migrate(); // applies pending migrations to production DB
+    }
+}
+
 
 //seed data
 // using (var scope = app.Services.CreateScope())
