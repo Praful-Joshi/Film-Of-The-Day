@@ -1,6 +1,7 @@
 using FilmOfTheDay.Core.Entities;
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
 public class ConnectionService : IConnectionService
@@ -14,13 +15,15 @@ public class ConnectionService : IConnectionService
         _notifService = notifService;
     }
 
-    public void SendRequest(int senderId, int receiverId)
+    public async Task SendRequestAsync(int senderId, int receiverId)
     {
         if (senderId == receiverId)
             throw new InvalidOperationException("You cannot send a request to yourself.");
-        if (AreFriends(senderId, receiverId))
+
+        if (await AreFriendsAsync(senderId, receiverId))
             throw new InvalidOperationException("Friendship already exists.");
-        else if (HasPendingRequest(senderId, receiverId))
+
+        if (await HasPendingRequestAsync(senderId, receiverId))
             throw new InvalidOperationException("A pending request already exists.");
 
         var friendship = new Friendship
@@ -31,64 +34,49 @@ public class ConnectionService : IConnectionService
         };
 
         _dbContext.Friendships.Add(friendship);
-        _dbContext.SaveChanges();
-        _notifService.CreateNotificationAsync(receiverId, NotificationType.NewFollower, "You have a new friend request.", null).Wait();
-    }
-    public bool AreFriends(int userId1, int userId2)
-    {
-        return _dbContext.Friendships.Any(f =>
-            ((f.SenderId == userId1 && f.ReceiverId == userId2) ||
-                (f.SenderId == userId2 && f.ReceiverId == userId1)) &&
-                f.Status == FriendshipStatus.Accepted);
+        await _dbContext.SaveChangesAsync();
+
+        await _notifService.CreateNotificationAsync(
+            receiverId,
+            NotificationType.NewFollower,
+            "You have a new friend request.",
+            null
+        );
     }
 
-    public bool HasPendingRequest(int senderId, int receiverId)
+    public async Task AcceptRequestAsync(int senderId, int receiverId)
     {
-        return _dbContext.Friendships.Any(f =>
-            f.SenderId == senderId && f.ReceiverId == receiverId && f.Status == FriendshipStatus.Pending);
-    }
-
-    public void AcceptRequest(int senderId, int receiverId)
-    {
-        var request = _dbContext.Friendships
-            .FirstOrDefault(f => f.SenderId == senderId && f.ReceiverId == receiverId && f.Status == FriendshipStatus.Pending);
+        var request = await _dbContext.Friendships
+            .FirstOrDefaultAsync(f =>
+                f.SenderId == senderId &&
+                f.ReceiverId == receiverId &&
+                f.Status == FriendshipStatus.Pending
+            );
 
         if (request == null)
             throw new InvalidOperationException("Request not found.");
 
         request.Status = FriendshipStatus.Accepted;
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
     public FriendshipState GetFriendshipState(int userId, int profileUserId)
     {
-        // Check if the current user sent a request to the profile user
-        var sent = _dbContext.Friendships
-            .FirstOrDefault(f => f.SenderId == userId && f.ReceiverId == profileUserId);
+        var friendship = _dbContext.Friendships.FirstOrDefault(f =>
+            (f.SenderId == userId && f.ReceiverId == profileUserId) ||
+            (f.SenderId == profileUserId && f.ReceiverId == userId));
 
-        if (sent != null)
-        {
-            return sent.Status switch
-            {
-                FriendshipStatus.Pending => FriendshipState.RequestSent,
-                FriendshipStatus.Accepted => FriendshipState.Friends,
-                _ => FriendshipState.None
-            };
-        }
+        if (friendship == null)
+            return FriendshipState.None;
 
-        // Check if the profile user sent a request to the current user
-        var received = _dbContext.Friendships
-            .FirstOrDefault(f => f.SenderId == profileUserId && f.ReceiverId == userId);
+        if (friendship.Status == FriendshipStatus.Accepted)
+            return FriendshipState.Friends;
 
-        if (received != null)
-        {
-            return received.Status switch
-            {
-                FriendshipStatus.Pending => FriendshipState.RequestReceived,
-                FriendshipStatus.Accepted => FriendshipState.Friends,
-                _ => FriendshipState.None
-            };
-        }
+        if (friendship.SenderId == userId)
+            return FriendshipState.RequestSent;
+
+        if (friendship.ReceiverId == userId)
+            return FriendshipState.RequestReceived;
 
         return FriendshipState.None;
     }
@@ -99,13 +87,20 @@ public class ConnectionService : IConnectionService
             (f.SenderId == userId || f.ReceiverId == userId) &&
             f.Status == FriendshipStatus.Accepted);
     }
-}
 
-public enum FriendshipState
-{
-    None,
-    RequestSent,
-    RequestReceived,
-    Friends
-}
+    private async Task<bool> AreFriendsAsync(int userId1, int userId2)
+    {
+        return await _dbContext.Friendships.AnyAsync(f =>
+            ((f.SenderId == userId1 && f.ReceiverId == userId2) ||
+             (f.SenderId == userId2 && f.ReceiverId == userId1)) &&
+            f.Status == FriendshipStatus.Accepted);
+    }
 
+    private async Task<bool> HasPendingRequestAsync(int senderId, int receiverId)
+    {
+        return await _dbContext.Friendships.AnyAsync(f =>
+            f.SenderId == senderId &&
+            f.ReceiverId == receiverId &&
+            f.Status == FriendshipStatus.Pending);
+    }
+}

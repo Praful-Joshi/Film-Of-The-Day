@@ -1,9 +1,10 @@
 using FilmOfTheDay.Web.Services.Interfaces;
+using FilmOfTheDay.Web.Models.Connection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-namespace FilmOfTheDay.Web.Controllers;
 
+namespace FilmOfTheDay.Web.Controllers;
 [Authorize]
 public class ConnectionController : Controller
 {
@@ -16,48 +17,66 @@ public class ConnectionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendRequest(int receiverId)
+    public async Task<IActionResult> SendRequest(int receiverId)
     {
-        var senderIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrWhiteSpace(senderIdValue) || !int.TryParse(senderIdValue, out var senderId))
-        {
+        if (!TryGetUserId(out var senderId))
             return Unauthorized();
-        }
 
-        // Your friend request creation logic here
-        _connectionService.SendRequest(senderId, receiverId);
-
-        // Return JSON if it's an AJAX call
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        try
         {
-            return Json(new { success = true, message = "Request sent" });
-        }
+            await _connectionService.SendRequestAsync(senderId, receiverId);
 
-        // Fallback for non-AJAX form submission
-        return RedirectToAction("Index", "Profile", new { id = receiverId });
+            if (IsAjaxRequest())
+                return Json(new { success = true, message = "Request sent" });
+
+            return RedirectToAction("Index", "Profile", new { id = receiverId });
+        }
+        catch (InvalidOperationException ex)
+        {
+            if (IsAjaxRequest())
+                return Json(new { success = false, message = ex.Message });
+
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("Index", "Profile", new { id = receiverId });
+        }
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AcceptRequest([FromBody] AcceptRequestDto dto)
+    public async Task<IActionResult> AcceptRequest([FromBody] AcceptRequestDto dto)
     {
-        var receiverIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrWhiteSpace(receiverIdValue) || !int.TryParse(receiverIdValue, out var receiverId))
-        {
+        if (!TryGetUserId(out var receiverId))
             return Unauthorized();
-        }
-        _connectionService.AcceptRequest(dto.SenderId, receiverId);
-        // Return JSON if it's an AJAX call
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-        {
-            return Json(new { success = true, message = "Request accepted" });
-        }
-        // Fallback for non-AJAX form submission
-        return RedirectToAction("Index", "Profile", new { id = dto.SenderId });
-    }
-}
 
-public class AcceptRequestDto
-{
-    public int SenderId { get; set; }
+        try
+        {
+            await _connectionService.AcceptRequestAsync(dto.SenderId, receiverId);
+
+            if (IsAjaxRequest())
+                return Json(new { success = true, message = "Request accepted" });
+
+            return RedirectToAction("Index", "Profile", new { id = dto.SenderId });
+        }
+        catch (InvalidOperationException ex)
+        {
+            if (IsAjaxRequest())
+                return Json(new { success = false, message = ex.Message });
+
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("Index", "Profile", new { id = dto.SenderId });
+        }
+    }
+
+    // --- Private helpers ---
+    private bool TryGetUserId(out int userId)
+    {
+        userId = 0;
+        var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(idValue, out userId);
+    }
+
+    private bool IsAjaxRequest()
+    {
+        return Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+    }
 }

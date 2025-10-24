@@ -4,8 +4,8 @@ using System.Security.Claims;
 namespace FilmOfTheDay.Web.Services.Interfaces;
 public interface IPostService
 {
-    Task<(bool Success, string? ErrorMessage)> CreatePostAsync(CreatePostViewModel model, ClaimsPrincipal user);
-    Task<CreatePostViewModel> SearchMoviesAsync(CreatePostViewModel model);
-    Task<ViewPostViewModel?> GetPostByIdAsync(int id);
+    public Task<(bool Success, string? ErrorMessage)> CreatePostAsync(CreatePostViewModel model, ClaimsPrincipal user);
+    public Task<CreatePostViewModel> SearchMoviesAsync(CreatePostViewModel model);
+    public Task<ViewPostViewModel?> GetPostByIdAsync(int id);
 }
 
