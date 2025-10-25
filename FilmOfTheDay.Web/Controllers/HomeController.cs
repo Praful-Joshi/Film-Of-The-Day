@@ -6,7 +6,6 @@ using FilmOfTheDay.Web.Services.Interfaces;
 using System.Security.Claims;
 
 namespace FilmOfTheDay.Web.Controllers;
-
 [Authorize]
 public class HomeController : Controller
 {
@@ -19,28 +18,49 @@ public class HomeController : Controller
         _homeFeedService = homeFeedService;
     }
 
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        //Get logged in user id
-        var userIdValue = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
-        if (string.IsNullOrWhiteSpace(userIdValue) || !int.TryParse(userIdValue, out var userId))
-        {
+        if (!TryGetUserId(out var userId))
             return Unauthorized();
+
+        try
+        {
+            var feed = await _homeFeedService.GetHomeFeedAsync(userId);
+            return View(feed);
         }
-        var feedTask = _homeFeedService.GetHomeFeedAsync(userId);
-        feedTask.Wait();
-        var feed = feedTask.Result;
-        return View(feed);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading home feed for user {UserId}", userId);
+            TempData["Error"] = "Unable to load your feed right now. Please try again later.";
+            return View("Error", new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
     }
 
+    [HttpGet]
     public IActionResult Privacy()
     {
         return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [HttpGet]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel 
+        { 
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier 
+        });
+    }
+
+    // --- Private helper ---
+    private bool TryGetUserId(out int userId)
+    {
+        userId = 0;
+        var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(idValue, out userId);
     }
 }

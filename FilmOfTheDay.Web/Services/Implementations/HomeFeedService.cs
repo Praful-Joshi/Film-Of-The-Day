@@ -27,6 +27,8 @@ public class HomeFeedService : IHomeFeedService
         friendIds.Add(userId);
 
         var feedItems = await _dbContext.FilmPosts
+            .AsNoTracking()
+            .Include(fi => fi.User)
             .Where(fi => friendIds.Contains(fi.UserId))
             .OrderByDescending(fi => fi.CreatedAt)
             .Select(fi => new FeedItemViewModel
