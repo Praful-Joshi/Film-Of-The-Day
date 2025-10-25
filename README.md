@@ -1,93 +1,137 @@
-# 🎬 FilmOfTheDay
+# 🎬 FilmOfTheDay (FOTD)
 
-**FilmOfTheDay** is a modern social web application built with **ASP.NET Core MVC** and **Entity Framework Core**, designed around a **clean, scalable, and modular architecture**.  
-It enables users to share film posts, follow friends, and stay updated through personalized feeds and notifications — all while maintaining clear separation between application layers for long-term scalability and maintainability.
+**FilmOfTheDay (FOTD)** is a full-featured ASP.NET Core MVC web application built using **Clean Architecture** principles.  
+It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions.
 
 ---
 
-## 🏗️ Architecture Overview
+## 🏗️ Clean Architecture Overview
 
-FilmOfTheDay follows **Clean Architecture (a.k.a. Onion / Hexagonal Architecture)** principles — ensuring that the system is modular, testable, and easy to scale.
+This project follows a **modular Clean Architecture** design pattern to ensure scalability, testability, and maintainability.  
+Each layer has a single responsibility, allowing the app to grow easily without coupling business logic to UI or data layers.
 
-### 📚 Layered Design
+### **Architecture Layers**
 
+1. **Core Layer (Domain Entities)**  
+   - Contains the fundamental business entities like `User`, `FilmPost`, `Friendship`, and `Notification`.
+   - Completely independent of frameworks — pure C# logic.
+
+2. **Infrastructure Layer (Data Access & Persistence)**  
+   - Uses **Entity Framework Core** for database operations.
+   - Contains the `ApplicationDbContext` which manages entities and database migrations.
+   - Manages connection to either **SQL Server (Development)** or **PostgreSQL (Production)**.
+
+3. **Web Layer (Presentation & Services)**  
+   - Implements MVC pattern (`Controllers`, `Views`, `ViewModels`).
+   - Contains all UI logic, route handling, and view rendering.
+   - Depends only on service interfaces, never on data access directly.
+
+4. **Services Layer (Business Logic)**  
+   - All controllers depend on service interfaces (like `IConnectionService`, `IHomeFeedService`, etc.).  
+   - Each service handles one domain responsibility (Connections, Notifications, Home Feed, Posts, etc.).
+   - All services are injected via **Dependency Injection (DI)** for clean separation of concerns.
+
+---
+
+## ⚙️ Dependency Injection (DI)
+
+FOTD heavily uses **Dependency Injection**, a built-in ASP.NET Core feature, to achieve loose coupling.  
+All major services (`HomeFeedService`, `ConnectionService`, `NotificationService`, etc.) are registered in the DI container and automatically provided to controllers.
+This ensures controllers are only responsible for request handling — not object creation or business logic.
+
+---
+
+## 🌍 Environment Configuration
+
+The project uses **two environments**:
+
+- **Development (Dev):**
+  - Uses a **local SQL Server** database.
+  - Ideal for debugging and local testing.
+
+- **Production (Prod):**
+  - Uses **PostgreSQL** hosted on **Render.com**.
+  - The live version of the app is hosted on Render's **free tier**.
+
+Environment configuration is handled using the built-in `DOTNET_ENVIRONMENT` variable:
+```bash
+export DOTNET_ENVIRONMENT=Development
+# or
+export DOTNET_ENVIRONMENT=Production
 ```
-FilmOfTheDay
-├── Core/               → Domain Entities & Enums (pure business logic)
-├── Infrastructure/     → Data layer (EF Core DbContext, repositories)
-├── Web/                → MVC layer (Controllers, Views, Services, ViewModels)
-```
 
-### 🧩 Layer Responsibilities
-
-| Layer | Description |
-|-------|--------------|
-| **Core** | Contains all **entities**, **value objects**, and **enums** (e.g., `User`, `FilmPost`, `Friendship`, `NotificationType`). This layer has **no dependencies** on others — it represents pure business logic. |
-| **Infrastructure** | Handles **data persistence** using **Entity Framework Core**. It defines the `ApplicationDbContext` and manages all database access. This layer depends only on the Core layer. |
-| **Web** | The presentation and API layer built with **ASP.NET Core MVC**. It contains **controllers**, **services**, and **view models**, ensuring that business logic stays out of controllers. |
-
-This separation allows independent evolution of each layer — for example, you could replace the MVC frontend with a Web API or Blazor app without touching the domain or database code.
+Each environment uses its own connection string and settings, defined in:
+- `appsettings.Development.json`
+- `appsettings.Production.json`
 
 ---
 
-## ⚙️ Key Design Principles
+## 🚀 Continuous Integration & Deployment (CI/CD)
 
-- **Dependency Inversion:** Controllers depend on interfaces (e.g., `IHomeFeedService`, `INotificationService`) — never on direct implementations.
-- **Single Responsibility:** Each service handles one concern: profile data, feed aggregation, notifications, etc.
-- **Separation of Concerns:** Controllers only coordinate; business logic lives in services; data logic stays in the infrastructure layer.
-- **Scalability:** The async EF Core queries, lightweight service boundaries, and clean structure make horizontal scaling (or microservice extraction) straightforward.
+The project benefits from **Render’s automatic CI/CD** pipeline:
+
+- The app is deployed directly from **GitHub**.
+- Render continuously tracks the **main branch**.
+- Every new commit to `main` triggers an **automatic build and deployment**.
+- This ensures the production site is always up to date with the latest tested code.
 
 ---
 
-## 🧠 Implemented Features
+## 💡 Implemented Features
 
-### 👤 User Profiles
-- View any user’s profile with their film posts.
-- Display username, email, number of posts, and friend count.
-- Follow/unfollow functionality via `ConnectionService`.
+### 👤 User System
+- Secure authentication & authorization with ASP.NET Identity.
+- Individual user profiles showing posts and friend stats.
 
 ### 🏠 Home Feed
-- Personalized feed showing posts from friends and self.
-- `HomeFeedService` aggregates posts efficiently using EF Core projections.
-- Sorted by creation date (latest first).
+- Displays posts from the logged-in user and their friends.
+- Automatically updates when new posts are created.
+
+### 📝 Film Posts
+- Users can create posts about movies.
+- Integrates with **TMDb API** for movie search and poster retrieval.
 
 ### 🔍 Search
-- Search users by username (case-insensitive).
-- Clean, async, server-side search using EF Core and `LIKE` expressions.
-- Displays basic profile info with placeholder images.
+- Allows searching for other users by username.
+
+### 🤝 Friend System (Connections)
+- Send, accept, or receive friend (follow) requests.
+- Friendship status and counts displayed dynamically.
 
 ### 🔔 Notifications
-- `NotificationService` manages creation, retrieval, and marking notifications as read.
-- Each notification includes message, timestamp, link, and type.
-- Clean separation between database entities and view models.
-
-### 👥 Friendships
-- Managed through a `Friendship` table with `Pending`, `Accepted`, and `Rejected` states.
-- Encapsulated by `ConnectionService` for cleaner business logic.
+- In-app notification system for new friend requests or accepted requests.
+- Managed through the `NotificationService` with read/unread states.
 
 ---
 
-## 🧰 Technologies Used
+## 🧩 Scalability & Maintainability
 
-| Technology | Purpose |
-|-------------|----------|
-| **ASP.NET Core MVC 8.0** | Web framework |
-| **Entity Framework Core** | ORM for data access |
-| **SQL Server / SQLite** | Database provider |
-| **TailwindCSS** | Modern styling (for views) |
-| **Dependency Injection** | Built-in DI container |
-| **Identity / Claims** | Authentication and user management |
+The Clean Architecture combined with service-oriented design ensures the project can scale easily:
+
+- Each feature is **self-contained** with its own controller, service, and view models.
+- Database and infrastructure concerns are isolated from business logic.
+- Adding new features (like comments, likes, or direct messages) only requires extending the service layer and creating new UI components.
+- EF Core ensures data access is optimized and manageable even with large user and post counts.
 
 ---
 
-## 🚀 Scalability & Extensibility
+## 🛠️ Tech Stack
 
-Because of its **clean separation**, FilmOfTheDay can be scaled or extended with minimal effort:
+- **Framework:** ASP.NET Core MVC 8.0  
+- **ORM:** Entity Framework Core  
+- **Frontend:** Razor Views + TailwindCSS  
+- **Database:** SQL Server (Dev) / PostgreSQL (Prod)  
+- **Hosting:** Render.com  
+- **External API:** The Movie Database (TMDb) API  
 
-- ✅ Add an **API layer** → expose the same services as REST endpoints.
-- ✅ Replace EF Core with another data source → only `Infrastructure` changes.
-- ✅ Add caching (e.g., Redis) → inject into service layer.
-- ✅ Deploy to cloud → independent horizontal scaling of web & database layers.
+---
+
+## 🧠 Key Takeaways
+
+- Built using modern **Clean Architecture** principles.  
+- Fully **asynchronous** service layer with **Dependency Injection**.  
+- **Scalable**, **testable**, and **deployment-ready** architecture.  
+- Clean separation between data, business, and UI layers.
 
 ---
 
@@ -101,7 +145,6 @@ Because of its **clean separation**, FilmOfTheDay can be scaled or extended with
 
 ---
 
-## 🧾 License
+## 📄 License
 
-This project is licensed under the **MIT License**.  
-You’re free to use, modify, and distribute it with attribution.
+This project is open-source under the **MIT License**.
