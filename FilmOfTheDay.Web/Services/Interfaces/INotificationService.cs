@@ -1,9 +1,10 @@
 using FilmOfTheDay.Core.Entities;
+using FilmOfTheDay.Web.Models.Notification;
 
 namespace FilmOfTheDay.Web.Services.Interfaces;
 public interface INotificationService
 {
-    Task CreateNotificationAsync(int userId, NotificationType type, string message, string? link = null);
-    Task<IEnumerable<Notification>> GetUserNotificationsAsync(int userId);
-    Task MarkAsReadAsync(int notificationId);
+    public Task CreateNotificationAsync(int userId, NotificationType type, string message, string? link = null);
+    public Task<NotificationViewModel> GetUserNotificationsAsync(int userId);
+    public Task MarkAsReadAsync(int notificationId);
 }

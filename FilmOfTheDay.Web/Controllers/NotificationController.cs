@@ -5,40 +5,55 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FilmOfTheDay.Web.Controllers;
-
 [Authorize]
 public class NotificationController : Controller
 {
     private readonly INotificationService _notificationService;
+    private readonly ILogger<NotificationController> _logger;
 
-    public NotificationController(INotificationService notificationService)
+    public NotificationController(INotificationService notificationService, ILogger<NotificationController> logger)
     {
         _notificationService = notificationService;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
-        {
+        if (!TryGetUserId(out var userId))
             return Unauthorized();
-        }
-        var notifications = await _notificationService.GetUserNotificationsAsync(userId);
-        var model = new NotificationViewModel
-        {
-            Notifications = notifications.Select(n => new NotificationItemViewModel
-            {
-                Id = n.Id,
-                Message = n.Message,
-                CreatedAt = n.CreatedAt,
-                IsRead = n.IsRead,
-                Link = n.Link,
-                SenderName = "",
-                SenderImageUrl = "/images/profile-placeholder.png"
 
-            }).ToList()
-        };
-        return View(model);
+        try
+        {
+            var model = await _notificationService.GetUserNotificationsAsync(userId);
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving notifications for user {UserId}", userId);
+            return View("Error", new NotificationViewModel
+            {
+                Notifications = new List<NotificationItemViewModel>()
+            });
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkAsRead(int id)
+    {
+        if (!TryGetUserId(out var _))
+            return Unauthorized();
+
+        await _notificationService.MarkAsReadAsync(id);
+        return Json(new { success = true });
+    }
+
+    // --- Private helper for user ID extraction ---
+    private bool TryGetUserId(out int userId)
+    {
+        userId = 0;
+        var value = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(value, out userId);
     }
 }

@@ -3,8 +3,8 @@ using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Home;
 using FilmOfTheDay.Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-namespace FilmOfTheDay.Web.Services.Implementations;
 
+namespace FilmOfTheDay.Web.Services.Implementations;
 public class HomeFeedService : IHomeFeedService
 {
     private readonly ApplicationDbContext _dbContext;
@@ -27,6 +27,8 @@ public class HomeFeedService : IHomeFeedService
         friendIds.Add(userId);
 
         var feedItems = await _dbContext.FilmPosts
+            .AsNoTracking()
+            .Include(fi => fi.User)
             .Where(fi => friendIds.Contains(fi.UserId))
             .OrderByDescending(fi => fi.CreatedAt)
             .Select(fi => new FeedItemViewModel

@@ -1,11 +1,16 @@
-using FilmOfTheDay.Web.Services.Implementations;
-
 namespace FilmOfTheDay.Web.Services.Interfaces;
-
 public interface IConnectionService
 {
-    void SendRequest(int senderId, int receiverId);
-    public void AcceptRequest(int senderId, int receiverId);
+    public Task SendRequestAsync(int senderId, int receiverId);
+    public Task AcceptRequestAsync(int senderId, int receiverId);
     public FriendshipState GetFriendshipState(int userId, int profileUserId);
     public int GetFriendsCount(int userId);
+}
+
+public enum FriendshipState
+{
+    None,
+    RequestSent,
+    RequestReceived,
+    Friends
 }
