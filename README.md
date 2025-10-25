@@ -1,57 +1,107 @@
-# 🎬 Film of the Day
+# 🎬 FilmOfTheDay
 
-A social media app for film lovers — share daily picks, discover friends' posts and browse an Instagram-like home feed. The project is built with ASP.NET Core MVC and EF Core using Clean Architecture.
+**FilmOfTheDay** is a modern social web application built with **ASP.NET Core MVC** and **Entity Framework Core**, designed around a **clean, scalable, and modular architecture**.  
+It enables users to share film posts, follow friends, and stay updated through personalized feeds and notifications — all while maintaining clear separation between application layers for long-term scalability and maintainability.
 
-## Implemented (current) features
+---
 
-- User registration, login and cookie-based authentication
-- Create and view film posts (image + description + date)
-- Profile pages showing a user's posts
-- Follow / connection requests (send / accept)
-- Notifications plumbing (service + controller) for basic alerts
-- Search page (query UI) and a vertical home feed that shows your and friends' posts sorted by newest
-- Responsive UI using Tailwind utility classes (with some Bootstrap assets)
+## 🏗️ Architecture Overview
 
-## Tech
+FilmOfTheDay follows **Clean Architecture (a.k.a. Onion / Hexagonal Architecture)** principles — ensuring that the system is modular, testable, and easy to scale.
 
-- .NET 8 (ASP.NET Core MVC)
-- Entity Framework Core (SQL Server by default)
-- Tailwind CSS for utilities; minimal JS for interactivity
-
-## Quick start
-
-1. Clone and enter the repo
-   ```bash
-   git clone <repo-url>
-   cd Film-Of-The-Day
-   ```
-2. Update the connection string in `FilmOfTheDay.Web/appsettings.json`.
-3. Apply migrations and seed (dev):
-   ```bash
-   dotnet ef database update --project FilmOfTheDay.Infrastructure --startup-project FilmOfTheDay.Web
-   ```
-4. (Optional) Rebuild Tailwind if you edit styles:
-   ```bash
-   npx tailwindcss -i ./FilmOfTheDay.Web/wwwroot/css/input.css -o ./FilmOfTheDay.Web/wwwroot/css/site.css --minify
-   ```
-5. Run the web app:
-   ```bash
-   dotnet run --project FilmOfTheDay.Web
-   ```
-
-## Dev notes
-
-- When you reset the DB, clear browser cookies or sign out — auth cookies are independent of DB state.
-- Follow/connection endpoints are AJAX-friendly and expect antiforgery tokens for POSTs.
-- Home feed service aggregates posts from the current user + accepted friends.
-
-## Project layout
+### 📚 Layered Design
 
 ```
-FilmOfTheDay/
-├─ FilmOfTheDay.Core/             # Entities
-├─ FilmOfTheDay.Infrastructure/   # DbContext, Migrations, seeders
-└─ FilmOfTheDay.Web/              # Controllers, Views, Services, Assets
+FilmOfTheDay
+├── Core/               → Domain Entities & Enums (pure business logic)
+├── Infrastructure/     → Data layer (EF Core DbContext, repositories)
+├── Web/                → MVC layer (Controllers, Views, Services, ViewModels)
 ```
 
+### 🧩 Layer Responsibilities
 
+| Layer | Description |
+|-------|--------------|
+| **Core** | Contains all **entities**, **value objects**, and **enums** (e.g., `User`, `FilmPost`, `Friendship`, `NotificationType`). This layer has **no dependencies** on others — it represents pure business logic. |
+| **Infrastructure** | Handles **data persistence** using **Entity Framework Core**. It defines the `ApplicationDbContext` and manages all database access. This layer depends only on the Core layer. |
+| **Web** | The presentation and API layer built with **ASP.NET Core MVC**. It contains **controllers**, **services**, and **view models**, ensuring that business logic stays out of controllers. |
+
+This separation allows independent evolution of each layer — for example, you could replace the MVC frontend with a Web API or Blazor app without touching the domain or database code.
+
+---
+
+## ⚙️ Key Design Principles
+
+- **Dependency Inversion:** Controllers depend on interfaces (e.g., `IHomeFeedService`, `INotificationService`) — never on direct implementations.
+- **Single Responsibility:** Each service handles one concern: profile data, feed aggregation, notifications, etc.
+- **Separation of Concerns:** Controllers only coordinate; business logic lives in services; data logic stays in the infrastructure layer.
+- **Scalability:** The async EF Core queries, lightweight service boundaries, and clean structure make horizontal scaling (or microservice extraction) straightforward.
+
+---
+
+## 🧠 Implemented Features
+
+### 👤 User Profiles
+- View any user’s profile with their film posts.
+- Display username, email, number of posts, and friend count.
+- Follow/unfollow functionality via `ConnectionService`.
+
+### 🏠 Home Feed
+- Personalized feed showing posts from friends and self.
+- `HomeFeedService` aggregates posts efficiently using EF Core projections.
+- Sorted by creation date (latest first).
+
+### 🔍 Search
+- Search users by username (case-insensitive).
+- Clean, async, server-side search using EF Core and `LIKE` expressions.
+- Displays basic profile info with placeholder images.
+
+### 🔔 Notifications
+- `NotificationService` manages creation, retrieval, and marking notifications as read.
+- Each notification includes message, timestamp, link, and type.
+- Clean separation between database entities and view models.
+
+### 👥 Friendships
+- Managed through a `Friendship` table with `Pending`, `Accepted`, and `Rejected` states.
+- Encapsulated by `ConnectionService` for cleaner business logic.
+
+---
+
+## 🧰 Technologies Used
+
+| Technology | Purpose |
+|-------------|----------|
+| **ASP.NET Core MVC 8.0** | Web framework |
+| **Entity Framework Core** | ORM for data access |
+| **SQL Server / SQLite** | Database provider |
+| **TailwindCSS** | Modern styling (for views) |
+| **Dependency Injection** | Built-in DI container |
+| **Identity / Claims** | Authentication and user management |
+
+---
+
+## 🚀 Scalability & Extensibility
+
+Because of its **clean separation**, FilmOfTheDay can be scaled or extended with minimal effort:
+
+- ✅ Add an **API layer** → expose the same services as REST endpoints.
+- ✅ Replace EF Core with another data source → only `Infrastructure` changes.
+- ✅ Add caching (e.g., Redis) → inject into service layer.
+- ✅ Deploy to cloud → independent horizontal scaling of web & database layers.
+
+---
+
+## 🧪 Future Enhancements
+
+- 💬 Commenting and likes on posts  
+- 📨 Real-time notifications (SignalR)  
+- 🖼️ Profile photo uploads  
+- 🧩 Modular API endpoints for mobile apps  
+- 🧠 Caching and query optimization  
+
+---
+
+## 🧾 License
+
+This project is licensed under the **MIT License**.  
+You’re free to use, modify, and distribute it with attribution.
