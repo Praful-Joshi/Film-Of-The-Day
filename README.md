@@ -1,6 +1,6 @@
-# 🎬 FilmOfTheDay (FOTD)
+# 🎬 FilmOfTheDay
 
-**FilmOfTheDay (FOTD)** is a full-featured ASP.NET Core MVC web application built using **Clean Architecture** principles.  
+**FilmOfTheDay** is a full-featured ASP.NET Core MVC web application built using **Clean Architecture** principles.  
 It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions.
 
 ---
