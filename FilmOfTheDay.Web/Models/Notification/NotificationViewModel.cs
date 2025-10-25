@@ -8,11 +8,24 @@ public class NotificationViewModel
 public class NotificationItemViewModel
 {
     public int Id { get; set; }
+
+    // who this notification belongs to
+    public int ReceiverId { get; set; }
+
+    // what triggered it (optional foreign key like sender user id)
+    public int? RelatedEntityId { get; set; }
+
+    // e.g. "PostLiked", "NewFollower", "CommentReplied", etc.
+    public NotificationType? Type { get; set; }
+
+    // readable message, e.g. "John liked your post"
     public string Message { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public bool IsRead { get; set; }
-    public string? SenderImageUrl { get; set; }
+
+    // link to take the user somewhere
     public string? Link { get; set; }
-    public string? SenderName { get; set; }
-    public NotificationType? NotifType { get; set; }
+
+    // whether it's been seen
+    public bool IsRead { get; set; } = false;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

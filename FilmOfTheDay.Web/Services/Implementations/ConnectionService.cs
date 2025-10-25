@@ -1,7 +1,9 @@
 using FilmOfTheDay.Core.Entities;
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Services.Interfaces;
+using FilmOfTheDay.Web.Models.Notification;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
 public class ConnectionService : IConnectionService
@@ -36,11 +38,22 @@ public class ConnectionService : IConnectionService
         _dbContext.Friendships.Add(friendship);
         await _dbContext.SaveChangesAsync();
 
-        await _notifService.CreateNotificationAsync(
-            receiverId,
-            NotificationType.NewFollower,
-            "You have a new friend request.",
-            null
+
+        //find sender user name
+        string senderName = await _dbContext.Users
+            .Where(u => u.Id == senderId)
+            .Select(u => u.Username)
+            .FirstOrDefaultAsync() ?? "Someone";
+    
+
+        await _notifService.CreateNotificationAsync(new NotificationItemViewModel
+        {
+            ReceiverId = receiverId,
+            RelatedEntityId = senderId,
+            Type = NotificationType.NewFollower,
+            Message = $"{senderName} sent you a friend request.",
+            Link = $"/Profile/Index/{senderId}"
+        }
         );
     }
 

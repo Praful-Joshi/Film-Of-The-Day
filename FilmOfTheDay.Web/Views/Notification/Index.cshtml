@@ -22,13 +22,11 @@
                     <!-- Left side: Avatar + message -->
                     <div class="flex items-center space-x-3">
                         <!-- User avatar -->
-                        <img src="@(notif.SenderImageUrl ?? "~/images/profile-placeholder.png")"
-                             alt="@notif.SenderName"
+                        <img src="~/images/profile-placeholder.png"
                              class="w-10 h-10 rounded-full object-cover" />
 
                         <div class="flex flex-col">
                             <span class="text-sm text-gray-800">
-                                <span class="font-semibold">@notif.SenderName</span>
                                 @notif.Message
                             </span>
 
