@@ -16,5 +16,8 @@ namespace FilmOfTheDay.Core.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [Required]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public bool ReadNotifications { get; set; } = true;
     }
 }

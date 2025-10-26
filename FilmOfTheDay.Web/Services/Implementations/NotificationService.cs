@@ -3,6 +3,7 @@ using FilmOfTheDay.Core.Entities;
 using FilmOfTheDay.Web.Services.Interfaces;
 using FilmOfTheDay.Web.Models.Notification;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
 public class NotificationService : INotificationService
@@ -14,14 +15,16 @@ public class NotificationService : INotificationService
         _dbContext = dbContext;
     }
 
-    public async Task CreateNotificationAsync(int userId, NotificationType type, string message, string? link = null)
+    public async Task CreateNotificationAsync(NotificationItemViewModel notifModel)
     {
         var notification = new Notification
         {
-            UserId = userId,
-            Type = type,
-            Message = message,
-            Link = link,
+            UserId = notifModel.ReceiverId,
+            RelatedEntityId = notifModel.RelatedEntityId,
+            Type = notifModel.Type,
+            Message = notifModel.Message,
+            Link = notifModel.Link,
+            IsRead = notifModel.IsRead,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -37,13 +40,13 @@ public class NotificationService : INotificationService
             .Select(n => new NotificationItemViewModel
             {
                 Id = n.Id,
+                ReceiverId = n.UserId,
+                RelatedEntityId = n.RelatedEntityId,
+                Type = n.Type,
                 Message = n.Message,
-                CreatedAt = n.CreatedAt,
-                IsRead = n.IsRead,
                 Link = n.Link,
-                SenderName = "", // Placeholder — can map sender info later
-                SenderImageUrl = "/images/profile-placeholder.png",
-                NotifType = n.Type
+                IsRead = n.IsRead,
+                CreatedAt = n.CreatedAt
             })
             .ToListAsync();
 
