@@ -28,6 +28,7 @@ public class NotificationController : Controller
         try
         {
             var model = await _notificationService.GetUserNotificationsAsync(userId);
+            await _notificationService.MarkUserNotificationsAsReadAsync(userId);
             return View(model);
         }
         catch (Exception ex)

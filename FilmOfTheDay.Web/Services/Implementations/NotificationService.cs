@@ -30,6 +30,16 @@ public class NotificationService : INotificationService
 
         _dbContext.Notifications.Add(notification);
         await _dbContext.SaveChangesAsync();
+
+        //find receiver user and set ReadNotifications to false
+        var receiverUser = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == notifModel.ReceiverId);
+        
+        if (receiverUser != null)
+        {
+            receiverUser.ReadNotifications = false;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public async Task<NotificationViewModel> GetUserNotificationsAsync(int userId)
@@ -54,5 +64,18 @@ public class NotificationService : INotificationService
         {
             Notifications = notificationItems
         };
+    }
+
+    public async Task MarkUserNotificationsAsReadAsync(int userId)
+    {
+        // Update user's ReadNotifications flag
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user != null)
+        {
+            user.ReadNotifications = true;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
