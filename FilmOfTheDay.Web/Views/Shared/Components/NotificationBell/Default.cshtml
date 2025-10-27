@@ -1,0 +1,11 @@
+@model bool
+
+<a asp-controller="Notification" asp-action="Index"
+   class="ml-3 relative text-gray-600 hover:text-blue-600 transition flex items-center justify-center">
+    <i class="bi bi-bell text-2xl"></i>
+
+    @if (Model)
+    {
+        <span class="absolute top-1 right-1 block w-2 h-2 bg-red-500 rounded-full"></span>
+    }
+</a>

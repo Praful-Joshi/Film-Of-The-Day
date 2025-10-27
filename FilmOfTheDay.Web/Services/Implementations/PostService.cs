@@ -1,6 +1,7 @@
 using FilmOfTheDay.Core.Entities;
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Post;
+using FilmOfTheDay.Web.Models.Notification;
 using FilmOfTheDay.Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -11,12 +12,15 @@ public class PostService : IPostService
 {
     private readonly ApplicationDbContext _db;
     private readonly HttpClient _httpClient;
+
+    private readonly INotificationService _notificationService;
     private readonly string _tmdbApiKey = "e6bd40c5241c0bb8f42b775e601985b1";
 
-    public PostService(ApplicationDbContext db)
+    public PostService(ApplicationDbContext db, INotificationService notificationService)
     {
         _db = db;
         _httpClient = new HttpClient();
+        _notificationService = notificationService;
     }
 
     public async Task<(bool Success, string? ErrorMessage)> CreatePostAsync(CreatePostViewModel model, ClaimsPrincipal userPrincipal)
@@ -41,6 +45,15 @@ public class PostService : IPostService
         _db.FilmPosts.Add(post);
         await _db.SaveChangesAsync();
 
+        await _notificationService.CreateNotificationAsync(new NotificationItemViewModel
+        {
+            ReceiverId = user.Id,
+            RelatedEntityId = post.Id,
+            Type = NotificationType.PostCreated,
+            Message = $"Check out your new post!",
+            Link = $"/Post/ViewPost/{post.Id}"
+        });
+        
         return (true, null);
     }
 

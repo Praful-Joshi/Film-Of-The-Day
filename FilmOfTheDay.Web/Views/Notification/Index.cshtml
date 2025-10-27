@@ -44,16 +44,6 @@
                             View
                         </a>
                     }
-                    else if (!notif.IsRead)
-                    {
-                        <form asp-action="MarkAsRead" method="post" class="inline">
-                            <input type="hidden" name="id" value="@notif.Id" />
-                            <button type="submit"
-                                    class="text-xs text-gray-500 hover:text-blue-600">
-                                Mark read
-                            </button>
-                        </form>
-                    }
                 </li>
             }
         </ul>

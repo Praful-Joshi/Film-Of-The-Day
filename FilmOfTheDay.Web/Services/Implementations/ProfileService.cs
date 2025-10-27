@@ -1,6 +1,7 @@
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Models.Profile;
 using FilmOfTheDay.Web.Services.Interfaces;
+using FilmOfTheDay.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -57,5 +58,18 @@ public class ProfileService : IProfileService
             Posts = posts,
             friendshipState = friendshipState
         };
+    }
+
+    public async Task<User>? GetLoggedInUserAsync(ClaimsPrincipal currentUser)
+    {
+        var loggedInUserIdStr = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(loggedInUserIdStr) || !int.TryParse(loggedInUserIdStr, out var loggedInUserId))
+            return null;
+
+        var user = await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == loggedInUserId);
+
+        return user;
     }
 }
