@@ -1,7 +1,7 @@
 # 🎬 FilmOfTheDay
 
 **FilmOfTheDay** is a full-featured ASP.NET Core MVC web application built using **Clean Architecture** principles.  
-It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions.
+It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions. [Try it yourself!](https://film-of-the-day.onrender.com)
 
 ---
 
