@@ -11,7 +11,9 @@ public class NotificationController : Controller
     private readonly INotificationService _notificationService;
     private readonly ILogger<NotificationController> _logger;
 
-    public NotificationController(INotificationService notificationService, ILogger<NotificationController> logger)
+    public NotificationController(
+        INotificationService notificationService,
+        ILogger<NotificationController> logger)
     {
         _notificationService = notificationService;
         _logger = logger;
@@ -36,17 +38,6 @@ public class NotificationController : Controller
                 Notifications = new List<NotificationItemViewModel>()
             });
         }
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> MarkAsRead(int id)
-    {
-        if (!TryGetUserId(out var _))
-            return Unauthorized();
-
-        await _notificationService.MarkAsReadAsync(id);
-        return Json(new { success = true });
     }
 
     // --- Private helper for user ID extraction ---

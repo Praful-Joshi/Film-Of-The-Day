@@ -55,15 +55,4 @@ public class NotificationService : INotificationService
             Notifications = notificationItems
         };
     }
-
-
-    public async Task MarkAsReadAsync(int notificationId)
-    {
-        var notif = await _dbContext.Notifications.FindAsync(notificationId);
-        if (notif == null)
-            return;
-
-        notif.IsRead = true;
-        await _dbContext.SaveChangesAsync();
-    }
 }
