@@ -6,6 +6,7 @@ public enum NotificationType
     PostLiked,
     NewFollower,
     CommentReplied,
+    PostCreated
     // add more as needed
 }
 
