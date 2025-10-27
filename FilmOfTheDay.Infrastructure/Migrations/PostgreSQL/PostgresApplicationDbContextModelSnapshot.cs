@@ -34,7 +34,6 @@ namespace FilmOfTheDay.Infrastructure.Migrations.PostgreSQL
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
@@ -46,7 +45,6 @@ namespace FilmOfTheDay.Infrastructure.Migrations.PostgreSQL
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("UserId")

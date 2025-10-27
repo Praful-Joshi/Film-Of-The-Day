@@ -3,11 +3,11 @@ public class CreatePostViewModel
 {
     public string SearchQuery { get; set; } = string.Empty;
 
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; } = string.Empty;
 
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
 
-    public string? SelectedMovieTitle { get; set; }
+    public string SelectedMovieTitle { get; set; } = string.Empty;
 
     public string? SelectedMoviePosterUrl { get; set; }
 
