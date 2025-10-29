@@ -1,5 +1,4 @@
 using FilmOfTheDay.Web.Services.Interfaces;
-using FilmOfTheDay.Web.Models.Connection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -43,19 +42,19 @@ public class ConnectionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AcceptRequest([FromBody] AcceptRequestDto dto)
+    public async Task<IActionResult> AcceptRequest([FromBody] int senderId)
     {
         if (!TryGetUserId(out var receiverId))
             return Unauthorized();
 
         try
         {
-            await _connectionService.AcceptRequestAsync(dto.SenderId, receiverId);
+            await _connectionService.AcceptRequestAsync(senderId, receiverId);
 
             if (IsAjaxRequest())
                 return Json(new { success = true, message = "Request accepted" });
 
-            return RedirectToAction("Index", "Profile", new { id = dto.SenderId });
+            return RedirectToAction("Index", "Profile", new { id = senderId });
         }
         catch (InvalidOperationException ex)
         {
@@ -63,7 +62,7 @@ public class ConnectionController : Controller
                 return Json(new { success = false, message = ex.Message });
 
             TempData["Error"] = ex.Message;
-            return RedirectToAction("Index", "Profile", new { id = dto.SenderId });
+            return RedirectToAction("Index", "Profile", new { id = senderId });
         }
     }
 

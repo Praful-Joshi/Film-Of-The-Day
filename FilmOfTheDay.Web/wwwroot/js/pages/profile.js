@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'RequestVerificationToken': token || ''
                     },
-                    body: JSON.stringify({ senderId: parseInt(senderId) })
+                    body: JSON.stringify(parseInt(senderId))
                 });
 
                 if (res.ok) {
