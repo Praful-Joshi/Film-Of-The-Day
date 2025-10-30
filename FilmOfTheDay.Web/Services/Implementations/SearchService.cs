@@ -23,9 +23,13 @@ public class SearchService : ISearchService
             };
         }
 
+        var normalizedQuery = query.ToLower();
+
         var searchedUsers = await _dbContext.Users
             .AsNoTracking()
-            .Where(u => EF.Functions.Like(u.Username, $"%{query}%"))
+            .Where(u =>
+                u.Username.ToLower().Contains(normalizedQuery) ||
+                u.Email.ToLower().Contains(normalizedQuery))
             .Select(u => new SearchedUserViewModel
             {
                 UserID = u.Id,
@@ -34,6 +38,7 @@ public class SearchService : ISearchService
                 Email = u.Email
             })
             .ToListAsync();
+
 
         return new SearchViewModel
         {

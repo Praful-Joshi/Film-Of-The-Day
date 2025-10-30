@@ -5,5 +5,7 @@ public interface INotificationService
 {
     public Task CreateNotificationAsync(NotificationItemViewModel notifModel);
     public Task<NotificationViewModel> GetUserNotificationsAsync(int userId);
-    public Task MarkUserNotificationsAsReadAsync(int userId);
+    public Task MarkAllUserNotificationsAsReadAsync(int userId);
+
+    public Task MarkSingleNotificationAsReadAsync(int notificationId);
 }

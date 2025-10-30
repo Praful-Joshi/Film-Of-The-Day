@@ -28,7 +28,7 @@ public class NotificationController : Controller
         try
         {
             var model = await _notificationService.GetUserNotificationsAsync(userId);
-            await _notificationService.MarkUserNotificationsAsReadAsync(userId);
+            await _notificationService.MarkAllUserNotificationsAsReadAsync(userId);
             return View(model);
         }
         catch (Exception ex)
@@ -39,6 +39,18 @@ public class NotificationController : Controller
                 Notifications = new List<NotificationItemViewModel>()
             });
         }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> MarkAsRead(int id, string redirectUrl)
+    {
+        await _notificationService.MarkSingleNotificationAsReadAsync(id);
+
+        // Redirect user to the link after marking as read
+        if (!string.IsNullOrEmpty(redirectUrl))
+            return Redirect(redirectUrl);
+
+        return RedirectToAction("Index");
     }
 
     // --- Private helper for user ID extraction ---

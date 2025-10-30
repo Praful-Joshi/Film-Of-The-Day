@@ -11,7 +11,6 @@ public class ProfileViewModel
     public FriendshipState friendshipState { get; set; }
     public int PostCount { get; set; }
     public int FriendsCount { get; set; } // optional
-    public int SavedCount { get; set; }   // optional
     public List<ProfilePostViewModel> Posts { get; set; } = new();
 }
 
