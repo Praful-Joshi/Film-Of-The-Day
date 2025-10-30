@@ -45,7 +45,7 @@ public class NotificationService : INotificationService
     public async Task<NotificationViewModel> GetUserNotificationsAsync(int userId)
     {
         var notificationItems = await _dbContext.Notifications
-            .Where(n => n.UserId == userId)
+            .Where(n => n.UserId == userId && !n.IsRead)
             .OrderByDescending(n => n.CreatedAt)
             .Select(n => new NotificationItemViewModel
             {
@@ -66,7 +66,7 @@ public class NotificationService : INotificationService
         };
     }
 
-    public async Task MarkUserNotificationsAsReadAsync(int userId)
+    public async Task MarkAllUserNotificationsAsReadAsync(int userId)
     {
         // Update user's ReadNotifications flag
         var user = await _dbContext.Users
@@ -75,6 +75,18 @@ public class NotificationService : INotificationService
         if (user != null)
         {
             user.ReadNotifications = true;
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task MarkSingleNotificationAsReadAsync(int notificationId)
+    {
+        var notification = await _dbContext.Notifications
+            .FirstOrDefaultAsync(n => n.Id == notificationId);
+
+        if (notification != null && !notification.IsRead)
+        {
+            notification.IsRead = true;
             await _dbContext.SaveChangesAsync();
         }
     }
