@@ -8,24 +8,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabButtons = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
 
-        tabButtons.forEach(btn => {
-            btn.classList.remove('border-blue-600', 'text-gray-800', 'font-bold');
-            btn.classList.add('text-gray-600', 'border-transparent');
-        });
-
+        // Hide all tab contents
         tabContents.forEach(tab => tab.classList.add('hidden'));
 
+        // Update tab button colors
+        tabButtons.forEach(btn => {
+            btn.classList.remove('text-gray-300');
+            btn.classList.add('text-gray-500');
+        });
+
+        // Activate clicked tab
         const activeButton = Array.from(tabButtons).find(btn =>
             btn.getAttribute('onclick')?.includes(tabName)
         );
         if (activeButton) {
-            activeButton.classList.remove('border-transparent', 'text-gray-600');
-            activeButton.classList.add('border-blue-600', 'text-gray-800', 'font-bold');
+            activeButton.classList.remove('text-gray-500');
+            activeButton.classList.add('text-gray-300');
         }
 
+        // Show the selected tab
         const activeTab = document.getElementById(tabName);
         if (activeTab) activeTab.classList.remove('hidden');
     }
+
 
     // expose showTab globally for inline onclick() bindings
     window.showTab = showTab;

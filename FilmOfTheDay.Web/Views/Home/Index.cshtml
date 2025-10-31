@@ -4,16 +4,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-0">
+<div class="min-h-screen pt-4 sm:px-0">
     <div class="max-w-xl mx-auto">
         @if (Model.FeedItems != null && Model.FeedItems.Any())
         {
             foreach (var post in Model.FeedItems)
             {
-                <div class="bg-white mx-auto max-w-sm rounded-lg shadow-sm overflow-hidden mb-8">
+                <div class="bg-gray-800 mx-auto max-w-sm sm:max-w-sm overflow-hidden mb-8">
                     <!-- Header -->
-                    <div class="flex items-center px-3 py-2 border-b border-gray-200">
-                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@post.UserID" class="font-semibold text-gray-800 hover:underline">
+                    <div class="flex items-center px-3 py-2">
+                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@post.UserID" class="font-semibold text-gray-300 hover:underline">
                             @post.UserName
                         </a>
                     </div>
@@ -21,9 +21,9 @@
                     <!-- Image -->
                     @if (!string.IsNullOrEmpty(post.ImageUrl))
                     {
-                        <div class="bg-gray-50 text-center">
+                        <div class="bg-gray-800 text-center">
                             <img src="@post.ImageUrl" alt="Post Image"
-                                 class="mx-auto max-w-full max-h-[50vh] object-contain" />
+                                 class="w-full max-h-100 object-contain" />
                         </div>
                     }
 
@@ -36,8 +36,8 @@
 
                     <!-- Details -->
                     <div class="px-3 py-2">
-                        <p><strong>@post.UserName</strong> @post.Description</p>
-                        <div class="text-xs text-gray-500">@post.CreatedAt.ToString("MMM dd, yyyy")</div>
+                        <p class="text-gray-300"><strong>@post.UserName</strong> @post.Description</p>
+                        <div class="text-xs text-gray-400">@post.CreatedAt.ToString("MMM dd, yyyy")</div>
                     </div>
                 </div>
             }

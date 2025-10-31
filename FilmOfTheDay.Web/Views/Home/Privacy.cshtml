@@ -2,7 +2,92 @@
     ViewData["Title"] = "Privacy Policy";
 }
 
-<div class="max-w-3xl mx-auto px-4 py-12">
-    <h1 class="text-3xl font-bold text-gray-800 mb-4">@ViewData["Title"]</h1>
-    <p class="text-gray-600">Use this page to detail your site's privacy policy.</p>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-8 text-gray-700 leading-relaxed">
+    <h1 class="text-3xl font-bold text-gray-300 mb-6">@ViewData["Title"]</h1>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">1. Introduction</h2>
+        <p class="text-gray-300">
+            At <strong>FilmOfTheDay</strong>, your privacy is important to us. This Privacy Policy explains how we
+            collect, use, and protect your personal information when you use our website and related services.
+            By using FilmOfTheDay, you agree to the terms of this Privacy Policy.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">2. Information We Collect</h2>
+        <ul class="list-disc pl-6 space-y-1 text-gray-300">
+            <li><strong>Account Information:</strong> such as your name, email address, and profile details when you create or update your account.</li>
+            <li><strong>Content You Share:</strong> including posts, comments, or other content you upload.</li>
+            <li><strong>Usage Data:</strong> information about how you interact with our site, such as pages visited and time spent.</li>
+            <li><strong>Cookies & Analytics:</strong> we may use cookies and third-party analytics tools to improve user experience and site performance.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">3. How We Use Your Information</h2>
+        <p class="text-gray-300">We use your information to:</p>
+        <ul class="list-disc pl-6 space-y-1 text-gray-300">
+            <li>Provide and improve our services and user experience.</li>
+            <li>Personalize content and film recommendations.</li>
+            <li>Communicate with you about updates, security, or promotional offers.</li>
+            <li>Maintain the safety and integrity of our platform.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">4. Sharing of Information</h2>
+        <p class="text-gray-300">
+            We do not sell or rent your personal data. We may share limited information with trusted third-party
+            providers who assist us in operating the platform, provided they maintain appropriate data protections.
+            We may also disclose data if required by law or to protect our legal rights.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">5. Data Security</h2>
+        <p class="text-gray-300">
+            We implement reasonable technical and organizational safeguards to protect your personal information
+            from unauthorized access, disclosure, or loss. However, no method of transmission over the internet is
+            completely secure, and we cannot guarantee absolute security.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">6. Your Rights and Choices</h2>
+        <p class="text-gray-300">
+            You can access, update, or delete your account information at any time from your profile settings.
+            You may also contact us to request removal of certain personal data, subject to applicable legal or
+            record-keeping requirements.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">7. Cookies and Tracking Technologies</h2>
+        <p class="text-gray-300">
+            We use cookies to improve user experience and analyze site usage. You can adjust your browser settings
+            to refuse cookies, but this may limit certain functionalities of our website.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">8. Changes to This Policy</h2>
+        <p class="text-gray-300">
+            We may update this Privacy Policy from time to time. Any significant changes will be communicated
+            through our website or via email. Continued use of the platform after such updates constitutes acceptance
+            of the revised policy.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">9. Contact Us</h2>
+        <p class="text-gray-300">
+            If you have questions or concerns about this Privacy Policy, please contact us at:<br />
+            <a href="mailto:support@filmoftheday.com" class="text-blue-600 hover:underline">support@filmoftheday.com</a>
+        </p>
+    </section>
+
+    <p class="text-sm text-gray-500 mt-8">
+        Last updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")
+    </p>
 </div>

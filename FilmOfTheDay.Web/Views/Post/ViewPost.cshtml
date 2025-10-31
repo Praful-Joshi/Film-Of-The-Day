@@ -3,34 +3,37 @@
     ViewData["Title"] = "View Post";
 }
 
-<div class="max-w-sm mx-auto my-10 bg-white rounded-lg shadow-sm overflow-hidden text-sm">
-    <!-- Header -->
-    <div class="flex items-center px-3 py-2 border-b border-gray-200">
-        <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserID" class="font-semibold text-gray-800 hover:underline">
-            @Model.UserName
-        </a>
-    </div>
-
-    <!-- Image -->
-    @if (!string.IsNullOrEmpty(Model.ImageUrl))
-    {
-        <div class="bg-gray-50 text-center">
-            <img src="@Model.ImageUrl" alt="Post Image"
-                 class="mx-auto max-w-full max-h-[50vh] object-contain" />
+<div class="pt-4">
+    <div class="max-w-full sm:max-w-sm mx-auto bg-gray-800 overflow-hidden">
+        <!-- Header -->
+        <div class="flex items-center px-3 py-2">
+            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserID" class="font-semibold text-gray-300 hover:underline">
+                @Model.UserName
+            </a>
         </div>
-    }
 
-    <!-- Actions -->
-    <div class="flex items-center px-3 py-1 space-x-3 text-lg">
-        <button class="hover:text-red-500">❤️</button>
-        <button class="hover:text-blue-500">💬</button>
-        <button class="ml-auto hover:text-yellow-500">🔖</button>
-    </div>
+        <!-- Image -->
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <div class="bg-gray-800 text-center">
+                <img src="@Model.ImageUrl" alt="Post Image"
+                    class="w-full max-h-100 object-contain" />
+            </div>
+        }
 
-    <!-- Details -->
-    <div class="px-3 py-2">
-        <p><strong>@Model.UserName</strong> @Model.Description</p>
-        <div class="text-xs text-gray-500">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+        <!-- Actions -->
+        <div class="flex items-center px-3 py-1 space-x-3 text-lg">
+            <button class="hover:text-red-500">❤️</button>
+            <button class="hover:text-blue-500">💬</button>
+            <button class="ml-auto hover:text-yellow-500">🔖</button>
+        </div>
+
+        <!-- Details -->
+        <div class="px-3 py-2">
+            <p class="text-gray-300"><strong>@Model.UserName</strong> @Model.Description</p>
+            <div class="text-xs text-gray-400">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+        </div>
     </div>
 </div>
+
 

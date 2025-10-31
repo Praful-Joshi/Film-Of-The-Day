@@ -8,17 +8,17 @@
     var isOwner = loggedInUserId == Model.UserID.ToString();
 }
 
-<div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+<div class="max-w-5xl mx-auto pt-4">
 
     <!-- Profile Header -->
-    <div class="flex flex-row items-center gap-6 flex-wrap">
+    <div class="flex flex-row items-center gap-6 px-4 flex-wrap">
         <img src="~/images/profile-placeholder.png" 
-             class="rounded-full w-28 h-28 object-cover" 
+             class="rounded-full w-20 h-20 object-cover" 
              alt="Profile Picture" />
 
         <div class="flex-1">
             <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-bold text-gray-800">@Model.UserName</h2>
+                <h2 class="text-2xl font-bold text-gray-300">@Model.UserName</h2>
 
                 @* Follow button visible only when viewing someone else's profile *@
                 @if (!isOwner)
@@ -26,7 +26,7 @@
                     <form asp-controller="Connection"
                         asp-action="SendRequest"
                         method="post"
-                        class="inline follow-form"
+                        class="inline text-sm follow-form"
                         asp-antiforgery="true">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="receiverId" value="@Model.UserID" />
@@ -59,7 +59,7 @@
                             <button type="button"
                                     id="followBtn"
                                     data-receiver="@Model.UserID"
-                                    class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
+                                    class="px-3 mb-1 py-1.5 font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
                                 @buttonText
                             </button>
                         }
@@ -67,7 +67,7 @@
                         {
                             <button type="submit"
                                     id="followBtn"
-                                    class="px-3 mb-1 py-1.5 text-sm font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
+                                    class="px-3 mb-1 py-1.5 font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
                                     @disabled>
                                 @buttonText
                             </button>
@@ -77,42 +77,40 @@
 
             </div>
 
-            <p class="text-gray-500">@Model.Email</p>
+            <p class="text-gray-400">@Model.Email</p>
 
-            <div class="flex gap-6 mt-3 text-gray-700">
+            <div class="flex gap-6 mt-3 text-gray-300">
                 <div><strong>@Model.PostCount</strong> Posts</div>
                 <div><strong>@Model.FriendsCount</strong> Friends</div>
             </div>
         </div>
     </div>
 
-    <hr class="border-gray-300" />
-
     <!-- Tabs -->
-    <div class="flex justify-center space-x-4 border-b border-gray-200">
-        <button class="tab-btn text-gray-600 font-medium py-2 px-4 border-b-2 border-blue-600"
+    <div class="flex justify-center border-b border-gray-700 pt-4">
+        <button class="tab-btn text-gray-300 font-medium py-2 px-4"
                 onclick="showTab('posts')">Posts</button>
 
         @if (isOwner)
         {
-            <button class="tab-btn text-gray-600 font-medium py-2 px-4 border-b-2 border-transparent"
+            <button class="tab-btn text-gray-500 font-medium py-2 px-4"
                     onclick="showTab('saved')">Saved</button>
         }
     </div>
 
+
     <!-- Posts Tab -->
-    <div id="posts" class="tab-content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+    <div id="posts" class="tab-content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
         @if (Model.Posts.Any())
         {
             foreach (var post in Model.Posts)
             {
-                <div class="cursor-pointer rounded-lg overflow-hidden shadow hover:shadow-lg transition"
-                     onclick="window.location.href='/post/viewpost?id=@post.Id'">
-                    <img src="@post.ImageUrl" class="w-full h-40 object-cover rounded-t-lg" />
-                    <div class="text-center p-2 bg-white">
-                        <h6 class="text-sm font-medium text-gray-800">@post.Title</h6>
-                    </div>
+                <div class="cursor-pointer overflow-hidden border aspect-square"
+                    onclick="window.location.href='/post/viewpost?id=@post.Id'">
+                    <img src="@post.ImageUrl"
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
                 </div>
+
             }
         }
         else

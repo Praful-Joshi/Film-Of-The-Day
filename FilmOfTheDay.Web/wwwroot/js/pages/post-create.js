@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectCard(card) {
         if (selectedCard) {
-            selectedCard.querySelector('.movie-select-card').classList.remove('bg-green-400');
+            selectedCard.querySelector('.movie-select-card').classList.remove('bg-green-800');
         }
         selectedCard = card.closest('.movie-card');
-        selectedCard.querySelector('.movie-select-card').classList.add('bg-green-400');
+        selectedCard.querySelector('.movie-select-card').classList.add('bg-green-800');
 
         inputTitle.value = card.dataset.title || '';
         inputPoster.value = card.dataset.poster || '';
