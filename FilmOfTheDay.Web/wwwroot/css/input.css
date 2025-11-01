@@ -6,3 +6,26 @@
     background-size: cover;
     background-position: center;
 }
+
+/* ===============================
+   🔧 Tailwind v4 Custom Theme
+================================= */
+@theme {
+  --color-brand-bg-light: #f2f2f2;
+  --color-brand-bg-light-hover: #e2e2e2;
+  --color-brand-bg-dark: #090b14;
+  --color-brand-bg-dark-hover: #0e111c;
+  --color-brand-bg-blue: #155DFC;
+  --color-brand-bg-blue-hover: #104ccc;
+  --color-brand-bg-green: #00A63E;
+  --color-brand-bg-green-hover: #00832f;
+  --color-brand-text-black: #090b14;
+  --color-brand-text-dark: #292929;
+  --color-brand-text-light: #f2f2f2;
+  --color-brand-text-link: #3B82F6;
+  --color-brand-text-muted: #64748B;
+  --color-brand-text-muted-hover: #404b59;
+  --color-site-card: #1E293B;
+  --color-danger: #EF4444;
+  --color-success: #22C55E;
+}

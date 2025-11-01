@@ -14,16 +14,16 @@
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
-<body class="bg-gray-800 text-gray-900">
+<body class="bg-brand-bg-dark">
 
     <!-- Header / Navbar -->
-    <header class="bg-gray-800 shadow-sm">
+    <header class="bg-brand-bg-dark shadow-sm">
         <nav class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
 
                 <div class= "flex items-center mx-1">
                     <!-- Brand -->
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-l sm:text-xl font-bold text-gray-300">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-l sm:text-xl font-bold text-brand-text-light">
                         FilmOfTheDay
                     </a>
                 </div>
@@ -37,11 +37,11 @@
                                     max-w-[160px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[500px]">
                             <input type="text" name="query" placeholder="Search users..."
                                 value="@Context.Request.Query["query"]"
-                                class="text-gray-300 w-full border border-gray-500 rounded-full py-1.5 pl-4 pr-10
-                                        text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="text-brand-text-light w-full border border-gray-500 rounded-full py-1.5 pl-4 pr-10
+                                        text-sm focus:outline-none focus:ring-2 focus:ring-brand-text-link focus:border-transparent"
                                 autocomplete="off" />
                             <button type="submit"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-text-muted">
                                 <i class="bi bi-search text-lg"></i>
                             </button>
                         </form>
@@ -51,15 +51,15 @@
                         
                         <!-- Mobile menu button -->
                         <button id="nav-toggle"
-                                class="md:hidden text-gray-300 hover:text-blue-600">
+                                class="md:hidden text-brand-text-light hover:text-brand-text-link">
                             <i class="bi bi-list text-3xl"></i>
                         </button>
 
                         <!-- Desktop Menu -->
                         <div class="hidden md:flex items-center space-x-4">
-                            <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="px-3 py-2 rounded text-gray-300 hover:text-blue-600 transition">Profile</a>
-                            <a asp-controller="Home" asp-action="Privacy" class="px-3 py-2 rounded text-gray-300 hover:text-blue-600 transition">Privacy</a>
-                            <a asp-controller="Auth" asp-action="Logout" class="px-3 py-2 rounded text-gray-300 hover:text-blue-600 transition">Logout</a>
+                            <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="px-3 py-2 rounded text-brand-text-light hover:text-brand-text-link transition">Profile</a>
+                            <a asp-controller="Home" asp-action="Privacy" class="px-3 py-2 rounded text-brand-text-light hover:text-brand-text-link transition">Privacy</a>
+                            <a asp-controller="Auth" asp-action="Logout" class="px-3 py-2 rounded text-brand-text-light hover:text-brand-text-link transition">Logout</a>
                         </div>
                     }
                 </div> 
@@ -70,9 +70,9 @@
             @if (User?.Identity?.IsAuthenticated ?? false)
             {
                 <div id="nav-menu" class="hidden md:hidden flex items-center flex-row justify-center pt-2 pb-3 gap-6">
-                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="block px-3 py-2 border border-gray-600 rounded-full text-gray-300 hover:text-blue-600 transition">Profile</a>
-                    <a asp-controller="Home" asp-action="Privacy" class="block px-3 py-2 border border-gray-600 rounded-full text-gray-300 hover:text-blue-600 transition">Privacy</a>
-                    <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 border border-gray-600 rounded-full text-gray-300 hover:text-blue-600 transition">Logout</a>
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@ownerID" class="block px-3 py-2 border border-gray-600 rounded-full text-brand-text-light hover:text-brand-text-link  transition">Profile</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="block px-3 py-2 border border-gray-600 rounded-full text-brand-text-light hover:text-brand-text-link  transition">Privacy</a>
+                    <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 border border-gray-600 rounded-full text-brand-text-light hover:text-brand-text-link  transition">Logout</a>
                 </div>
             }
         </nav>
@@ -88,7 +88,7 @@
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
         <a asp-controller="Post" asp-action="Create"
-           class="fixed bottom-8 left-1/2 -translate-x-1/2 w-16 h-16 flex items-center justify-center text-2xl text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 transition z-50">
+           class="fixed bottom-8 left-1/2 -translate-x-1/2 w-16 h-16 flex items-center justify-center text-2xl text-brand-text-light bg-brand-bg-blue rounded-full shadow-lg hover:bg-brand-bg-blue-hover transition z-50">
             <span class="sr-only">Create Post</span>
             <i class="bi bi-plus"></i>
         </a>

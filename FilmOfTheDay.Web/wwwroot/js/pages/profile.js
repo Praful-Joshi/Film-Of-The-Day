@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update tab button colors
         tabButtons.forEach(btn => {
-            btn.classList.remove('text-gray-300');
-            btn.classList.add('text-gray-500');
+            btn.classList.remove('text-brand-text-light');
+            btn.classList.add('text-brand-text-muted');
         });
 
         // Activate clicked tab
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.getAttribute('onclick')?.includes(tabName)
         );
         if (activeButton) {
-            activeButton.classList.remove('text-gray-500');
-            activeButton.classList.add('text-gray-300');
+            activeButton.classList.remove('text-brand-text-muted');
+            activeButton.classList.add('text-brand-text-light');
         }
 
         // Show the selected tab
