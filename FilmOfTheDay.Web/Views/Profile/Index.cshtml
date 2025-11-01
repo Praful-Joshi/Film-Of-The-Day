@@ -18,7 +18,7 @@
 
         <div class="flex-1">
             <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-bold text-gray-300">@Model.UserName</h2>
+                <h2 class="text-2xl font-bold text-brand-text-light">@Model.UserName</h2>
 
                 @* Follow button visible only when viewing someone else's profile *@
                 @if (!isOwner)
@@ -33,7 +33,7 @@
 
                         @{
                                 var buttonText = "Add Friend";
-                                var buttonClass = "bg-blue-500 hover:bg-blue-600";
+                                var buttonClass = "bg-brand-bg-blue hover:bg-brand-bg-blue-hover";
                                 var disabled = "";
                                 var isAcceptAction = false; // whether button should call AcceptRequest
 
@@ -59,7 +59,7 @@
                             <button type="button"
                                     id="followBtn"
                                     data-receiver="@Model.UserID"
-                                    class="px-3 mb-1 py-1.5 font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
+                                    class="px-3 mb-1 py-1.5 font-semibold text-brand-text-light rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
                                 @buttonText
                             </button>
                         }
@@ -67,7 +67,7 @@
                         {
                             <button type="submit"
                                     id="followBtn"
-                                    class="px-3 mb-1 py-1.5 font-semibold text-white rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
+                                    class="px-3 mb-1 py-1.5 font-semibold text-brand-text-light rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
                                     @disabled>
                                 @buttonText
                             </button>
@@ -77,9 +77,9 @@
 
             </div>
 
-            <p class="text-gray-400">@Model.Email</p>
+            <p class="text-brand-text-muted">@Model.Email</p>
 
-            <div class="flex gap-6 mt-3 text-gray-300">
+            <div class="flex gap-6 mt-3 text-brand-text-light">
                 <div><strong>@Model.PostCount</strong> Posts</div>
                 <div><strong>@Model.FriendsCount</strong> Friends</div>
             </div>
@@ -88,12 +88,12 @@
 
     <!-- Tabs -->
     <div class="flex justify-center border-b border-gray-700 pt-4">
-        <button class="tab-btn text-gray-300 font-medium py-2 px-4"
+        <button class="tab-btn text-brand-text-light font-medium py-2 px-4"
                 onclick="showTab('posts')">Posts</button>
 
         @if (isOwner)
         {
-            <button class="tab-btn text-gray-500 font-medium py-2 px-4"
+            <button class="tab-btn text-brand-text-muted font-medium py-2 px-4"
                     onclick="showTab('saved')">Saved</button>
         }
     </div>
@@ -115,14 +115,14 @@
         }
         else
         {
-            <p class="col-span-full text-center text-gray-500 mt-4">No posts yet.</p>
+            <p class="col-span-full text-center text-brand-text-muted mt-4">No posts yet.</p>
         }
     </div>
 
     <!-- Saved Tab -->
     @if (isOwner)
     {
-        <div id="saved" class="tab-content hidden text-center text-gray-500 mt-4">
+        <div id="saved" class="tab-content hidden text-center text-brand-text-muted mt-4">
             Saved posts will appear here.
         </div>
     }

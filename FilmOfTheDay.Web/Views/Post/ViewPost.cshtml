@@ -4,10 +4,10 @@
 }
 
 <div class="pt-4">
-    <div class="max-w-full sm:max-w-sm mx-auto bg-gray-800 overflow-hidden">
+    <div class="max-w-full sm:max-w-sm mx-auto bg-brand-bg-dark overflow-hidden">
         <!-- Header -->
-        <div class="flex items-center px-3 py-2">
-            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserID" class="font-semibold text-gray-300 hover:underline">
+        <div class="flex items-center px-6 pt-2 pb-2.5">
+            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserID" class="font-semibold text-brand-text-light hover:underline">
                 @Model.UserName
             </a>
         </div>
@@ -15,23 +15,23 @@
         <!-- Image -->
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
-            <div class="bg-gray-800 text-center">
+            <div class="bg-brand-bg-dark text-center">
                 <img src="@Model.ImageUrl" alt="Post Image"
                     class="w-full max-h-100 object-contain" />
             </div>
         }
 
         <!-- Actions -->
-        <div class="flex items-center px-3 py-1 space-x-3 text-lg">
-            <button class="hover:text-red-500">❤️</button>
-            <button class="hover:text-blue-500">💬</button>
-            <button class="ml-auto hover:text-yellow-500">🔖</button>
+        <div class="flex items-center px-6 pt-2 pb-1 space-x-3 text-lg">
+            <button>❤️</button>
+            <button>💬</button>
+            <button class="ml-auto">🔖</button>
         </div>
 
         <!-- Details -->
-        <div class="px-3 py-2">
-            <p class="text-gray-300"><strong>@Model.UserName</strong> @Model.Description</p>
-            <div class="text-xs text-gray-400">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+        <div class="px-6 pb-2 pt-1">
+            <p class="text-brand-text-light"><strong>@Model.UserName</strong> @Model.Description</p>
+            <div class="text-xs text-brand-text-muted">@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
         </div>
     </div>
 </div>
