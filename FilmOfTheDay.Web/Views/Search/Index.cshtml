@@ -5,20 +5,20 @@
 }
 
 <div class="max-w-full sm:w-1/2 mx-auto py-8">
-    <h1 class="text-2xl text-brand-text-light font-bold mb-6 text-center">Search Results</h1>
+    <h1 class="text-2xl text-brand-light font-bold mb-6 text-center">Search Results</h1>
 
     @if (!Model.Users.Any())
     {
-        <p class="flex justify-center text-brand-text-muted">No users found.</p>
+        <p class="flex justify-center text-brand-muted">No users found.</p>
     }
     else
     {
-        <ul class="bg-brand-bg-dark">
+        <ul class="bg-brand-black">
             @foreach (var user in Model.Users)
             {
-                <li class="flex items-center p-4 hover:bg-brand-bg-dark-hover transition">
+                <li class="flex items-center p-4 hover:bg-brand-black-hover transition">
                     <img src="@user.ProfileImageUrl" alt="@user.UserName" class="w-10 h-10 rounded-full mr-3" />
-                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@user.UserID" class="font-medium text-brand-text-light hover:text-brand-text-link">
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@user.UserID" class="font-medium text-brand-light hover:text-brand-link">
                         @user.UserName
                     </a>
                 </li>

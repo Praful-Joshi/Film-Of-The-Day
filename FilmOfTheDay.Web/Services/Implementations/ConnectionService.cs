@@ -72,6 +72,20 @@ public class ConnectionService : IConnectionService
         request.Status = FriendshipStatus.Accepted;
         await _dbContext.SaveChangesAsync();
     }
+    
+    public async Task RemoveFriendAsync(int userId, int friendId)
+    {
+        var friendship = await _dbContext.Friendships.FirstOrDefaultAsync(f =>
+            ((f.SenderId == userId && f.ReceiverId == friendId) ||
+            (f.SenderId == friendId && f.ReceiverId == userId)) &&
+            f.Status == FriendshipStatus.Accepted);
+
+        if (friendship == null)
+            throw new InvalidOperationException("Friendship not found.");
+
+        _dbContext.Friendships.Remove(friendship);
+        await _dbContext.SaveChangesAsync();
+    }
 
     public FriendshipState GetFriendshipState(int userId, int profileUserId)
     {

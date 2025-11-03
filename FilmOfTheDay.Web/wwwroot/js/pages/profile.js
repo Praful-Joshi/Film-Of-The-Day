@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update tab button colors
         tabButtons.forEach(btn => {
-            btn.classList.remove('text-brand-text-light');
-            btn.classList.add('text-brand-text-muted');
+            btn.classList.remove('text-brand-light');
+            btn.classList.add('text-brand-muted');
         });
 
         // Activate clicked tab
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.getAttribute('onclick')?.includes(tabName)
         );
         if (activeButton) {
-            activeButton.classList.remove('text-brand-text-muted');
-            activeButton.classList.add('text-brand-text-light');
+            activeButton.classList.remove('text-brand-muted');
+            activeButton.classList.add('text-brand-light');
         }
 
         // Show the selected tab
@@ -31,83 +31,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeTab) activeTab.classList.remove('hidden');
     }
 
-
-    // expose showTab globally for inline onclick() bindings
+    // Expose globally for inline onclick()
     window.showTab = showTab;
 
     // =========================
-    // FOLLOW / FRIEND LOGIC
+    // SEND REQUEST FORM
     // =========================
-    const followForm = document.querySelector('.follow-form');
-    const followBtn = document.getElementById('followBtn');
-
-    if (!followForm || !followBtn) return;
-
-    // Case 1: "Accept Request" button (type="button")
-    if (followBtn.type === 'button') {
-        followBtn.addEventListener('click', async () => {
-            const senderId = followBtn.getAttribute('data-receiver');
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-
-            followBtn.disabled = true;
-            followBtn.textContent = 'Accepting...';
+    const sendForm = document.querySelector('.send-request-form');
+    if (sendForm) {
+        sendForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = sendForm.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            const formData = new FormData(sendForm);
 
             try {
-                const res = await fetch('/Connection/AcceptRequest', {
+                const res = await fetch('/Connection/SendRequest', {
                     method: 'POST',
+                    body: formData,
                     credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'RequestVerificationToken': token || ''
-                    },
-                    body: JSON.stringify(parseInt(senderId))
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
-
-                if (res.ok) {
-                    followBtn.textContent = 'Friends';
-                } else {
-                    followBtn.textContent = 'Error';
-                    followBtn.disabled = false;
-                }
+                btn.textContent = res.ok ? 'Requested' : 'Error';
             } catch (err) {
-                console.error('Accept request failed:', err);
-                followBtn.textContent = 'Try Again';
-                followBtn.disabled = false;
+                console.error(err);
+                btn.textContent = 'Try Again';
+                btn.disabled = false;
             }
         });
     }
 
-    // Case 2: Regular "Send Request" form submit
-    followForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // =========================
+    // ACCEPT REQUEST FORM
+    // =========================
+    const acceptForm = document.querySelector('.accept-request-form');
+    if (acceptForm) {
+        acceptForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = acceptForm.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Accepting...';
+            const formData = new FormData(acceptForm);
 
-        followBtn.disabled = true;
-        followBtn.textContent = 'Sending...';
-
-        const formData = new FormData(followForm);
-
-        try {
-            const url = followForm.action?.length > 0 ? followForm.action : '/Connection/SendRequest';
-
-            const response = await fetch(url, {
-                method: 'POST',
-                body: formData,
-                credentials: 'same-origin',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            if (response.ok) {
-                followBtn.textContent = 'Requested';
-            } else {
-                followBtn.textContent = 'Error';
-                followBtn.disabled = false;
+            try {
+                const res = await fetch('/Connection/AcceptRequest', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                btn.textContent = res.ok ? 'Friends' : 'Error';
+                if (res.ok) setTimeout(() => window.location.reload(), 800);
+            } catch (err) {
+                console.error(err);
+                btn.textContent = 'Try Again';
+                btn.disabled = false;
             }
-        } catch (err) {
-            console.error('Follow request failed:', err);
-            followBtn.textContent = 'Try Again';
-            followBtn.disabled = false;
-        }
-    });
+        });
+    }
 });

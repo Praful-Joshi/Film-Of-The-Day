@@ -3,6 +3,7 @@ public interface IConnectionService
 {
     public Task SendRequestAsync(int senderId, int receiverId);
     public Task AcceptRequestAsync(int senderId, int receiverId);
+    public Task RemoveFriendAsync(int userId, int friendId);
     public FriendshipState GetFriendshipState(int userId, int profileUserId);
     public int GetFriendsCount(int userId);
 }
