@@ -1,6 +1,7 @@
 @model FilmOfTheDay.Web.Models.Profile.ProfileViewModel
 @using System.Security.Claims
 @using FilmOfTheDay.Web.Services.Interfaces;
+@using FilmOfTheDay.Web.Models.Post;
 
 @{
     ViewData["Title"] = "Profile";
@@ -18,68 +19,71 @@
 
         <div class="flex-1">
             <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-bold text-brand-text-light">@Model.UserName</h2>
-
-                @* Follow button visible only when viewing someone else's profile *@
+                <h2 class="text-2xl font-bold text-brand-light">@Model.UserName</h2>
+                @* ===============================
+                FRIENDSHIP BUTTON SECTION
+                =============================== *@
                 @if (!isOwner)
                 {
-                    <form asp-controller="Connection"
-                        asp-action="SendRequest"
-                        method="post"
-                        class="inline text-sm follow-form"
-                        asp-antiforgery="true">
+                    <form method="post"
+                        class="inline text-sm friendship-form"
+                        asp-antiforgery="true"
+                        id="friendshipForm">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="receiverId" value="@Model.UserID" />
 
-                        @{
-                                var buttonText = "Add Friend";
-                                var buttonClass = "bg-brand-bg-blue hover:bg-brand-bg-blue-hover";
-                                var disabled = "";
-                                var isAcceptAction = false; // whether button should call AcceptRequest
+                        @* Common hidden input that changes depending on state *@
+                        <input type="hidden" name="otherId" value="@Model.UserID" />
 
-                                switch (Model.friendshipState)
+                        @switch (Model.friendshipState)
+                        {
+                            case FriendshipState.None:
+                                <button formaction="@Url.Action("SendRequest", "Connection")"
+                                        class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150">
+                                    Add Friend
+                                </button>
+                                break;
+
+                            case FriendshipState.RequestSent:
+                                <button disabled
+                                        class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue rounded-full shadow-sm transition-transform duration-150 opacity-80">
+                                    Requested
+                                </button>
+                                break;
+
+                            case FriendshipState.RequestReceived:
+                                <button formaction="@Url.Action("AcceptRequest", "Connection")"
+                                        class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150">
+                                    Accept Request
+                                </button>
+                                break;
+
+                            case FriendshipState.Friends:
+                                <button type="button"
+                                        class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150"
+                                        data-popup-target="removeFriendPopup">
+                                    Friends
+                                </button>
+
+                                @await Component.InvokeAsync("ConfirmPopup", new ConfirmPopupViewModel
                                 {
-                                    case FriendshipState.RequestSent:
-                                        buttonText = "Requested";
-                                        disabled = "disabled";
-                                        break;
-                                    case FriendshipState.Friends:
-                                        buttonText = "Friends";
-                                        disabled = "disabled";
-                                        break;
-                                    case FriendshipState.RequestReceived:
-                                        buttonText = "Accept Request";
-                                        isAcceptAction = true;
-                                        break;
-                                }
-                        }
-
-                        @if (isAcceptAction)
-                        {
-                            <button type="button"
-                                    id="followBtn"
-                                    data-receiver="@Model.UserID"
-                                    class="px-3 mb-1 py-1.5 font-semibold text-brand-text-light rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass">
-                                @buttonText
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="submit"
-                                    id="followBtn"
-                                    class="px-3 mb-1 py-1.5 font-semibold text-brand-text-light rounded-full shadow-sm active:scale-95 transition-transform duration-150 @buttonClass"
-                                    @disabled>
-                                @buttonText
-                            </button>
+                                    PopupId = "removeFriendPopup",
+                                    Title = "Remove friend?",
+                                    Message = $"Are you sure you want to remove {Model.UserName} from your friends list?",
+                                    YesText = "Yes, remove",
+                                    NoText = "Cancel",
+                                    YesAction = Url.Action("RemoveFriend", "Connection", new { otherId = Model.UserID }),
+                                    RedirectAftersuccess = Url.Action("Index", "Home")
+                                })
+                                break;
                         }
                     </form>
                 }
 
             </div>
 
-            <p class="text-brand-text-muted">@Model.Email</p>
+            <p class="text-brand-muted">@Model.Email</p>
 
-            <div class="flex gap-6 mt-3 text-brand-text-light">
+            <div class="flex gap-6 mt-3 text-brand-light">
                 <div><strong>@Model.PostCount</strong> Posts</div>
                 <div><strong>@Model.FriendsCount</strong> Friends</div>
             </div>
@@ -88,12 +92,12 @@
 
     <!-- Tabs -->
     <div class="flex justify-center border-b border-gray-700 pt-4">
-        <button class="tab-btn text-brand-text-light font-medium py-2 px-4"
+        <button class="tab-btn text-brand-light font-medium py-2 px-4"
                 onclick="showTab('posts')">Posts</button>
 
         @if (isOwner)
         {
-            <button class="tab-btn text-brand-text-muted font-medium py-2 px-4"
+            <button class="tab-btn text-brand-muted font-medium py-2 px-4"
                     onclick="showTab('saved')">Saved</button>
         }
     </div>
@@ -115,14 +119,14 @@
         }
         else
         {
-            <p class="col-span-full text-center text-brand-text-muted mt-4">No posts yet.</p>
+            <p class="col-span-full text-center text-brand-muted mt-4">No posts yet.</p>
         }
     </div>
 
     <!-- Saved Tab -->
     @if (isOwner)
     {
-        <div id="saved" class="tab-content hidden text-center text-brand-text-muted mt-4">
+        <div id="saved" class="tab-content hidden text-center text-brand-muted mt-4">
             Saved posts will appear here.
         </div>
     }

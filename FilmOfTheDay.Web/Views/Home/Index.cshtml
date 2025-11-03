@@ -10,10 +10,10 @@
         {
             foreach (var post in Model.FeedItems)
             {
-                <div class="bg-brand-bg-dark mx-auto max-w-sm sm:max-w-sm overflow-hidden mb-8">
+                <div class="bg-brand-black mx-auto max-w-sm sm:max-w-sm overflow-hidden mb-8">
                     <!-- Header -->
                     <div class="flex items-center px-6 pt-2 pb-2.5">
-                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@post.UserID" class="text-md font-semibold text-brand-text-light hover:underline">
+                        <a asp-controller="Profile" asp-action="Index" asp-route-id="@post.UserID" class="text-md font-semibold text-brand-light hover:underline">
                             @post.UserName
                         </a>
                     </div>
@@ -21,7 +21,7 @@
                     <!-- Image -->
                     @if (!string.IsNullOrEmpty(post.ImageUrl))
                     {
-                        <div class="bg-brand-bg-dark text-center">
+                        <div class="bg-brand-black text-center">
                             <img src="@post.ImageUrl" alt="Post Image"
                                  class="w-full max-h-100 object-contain" />
                         </div>
@@ -36,15 +36,15 @@
 
                     <!-- Details -->
                     <div class="px-6 pb-2 pt-1">
-                        <p class="text-md text-brand-text-light"><strong>@post.UserName</strong> @post.Description</p>
-                        <div class="text-xs text-brand-text-muted">@post.CreatedAt.ToString("MMM dd, yyyy")</div>
+                        <p class="text-md text-brand-light"><strong>@post.UserName</strong> @post.Description</p>
+                        <div class="text-xs text-brand-muted">@post.CreatedAt.ToString("MMM dd, yyyy")</div>
                     </div>
                 </div>
             }
         }
         else
         {
-            <div class="text-center text-brand-text-muted px-4">No posts to show yet. Start following friends or create your first post!</div>
+            <div class="text-center text-brand-muted px-4">No posts to show yet. Start following friends or create your first post!</div>
         }
     </div>
 </div>

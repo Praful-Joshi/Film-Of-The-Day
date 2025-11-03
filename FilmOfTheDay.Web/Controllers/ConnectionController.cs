@@ -16,19 +16,19 @@ public class ConnectionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SendRequest(int receiverId)
+    public async Task<IActionResult> SendRequest(int otherId)
     {
         if (!TryGetUserId(out var senderId))
             return Unauthorized();
 
         try
         {
-            await _connectionService.SendRequestAsync(senderId, receiverId);
+            await _connectionService.SendRequestAsync(senderId, otherId);
 
             if (IsAjaxRequest())
                 return Json(new { success = true, message = "Request sent" });
 
-            return RedirectToAction("Index", "Profile", new { id = receiverId });
+            return RedirectToAction("Index", "Profile", new { id = otherId });
         }
         catch (InvalidOperationException ex)
         {
@@ -36,25 +36,25 @@ public class ConnectionController : Controller
                 return Json(new { success = false, message = ex.Message });
 
             TempData["Error"] = ex.Message;
-            return RedirectToAction("Index", "Profile", new { id = receiverId });
+            return RedirectToAction("Index", "Profile", new { id = otherId });
         }
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AcceptRequest([FromBody] int senderId)
+    public async Task<IActionResult> AcceptRequest(int otherId)
     {
         if (!TryGetUserId(out var receiverId))
             return Unauthorized();
 
         try
         {
-            await _connectionService.AcceptRequestAsync(senderId, receiverId);
+            await _connectionService.AcceptRequestAsync(otherId, receiverId);
 
             if (IsAjaxRequest())
                 return Json(new { success = true, message = "Request accepted" });
 
-            return RedirectToAction("Index", "Profile", new { id = senderId });
+            return RedirectToAction("Index", "Profile", new { id = otherId });
         }
         catch (InvalidOperationException ex)
         {
@@ -62,10 +62,29 @@ public class ConnectionController : Controller
                 return Json(new { success = false, message = ex.Message });
 
             TempData["Error"] = ex.Message;
-            return RedirectToAction("Index", "Profile", new { id = senderId });
+            return RedirectToAction("Index", "Profile", new { id = otherId });
         }
     }
 
+    [HttpPost]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> RemoveFriend(int otherId)
+    {
+        if (!TryGetUserId(out var userId))
+            return Json(new { success = false, message = "Unauthorized" });
+
+        try
+        {
+            await _connectionService.RemoveFriendAsync(userId, otherId);
+            return Json(new { success = true, message = "Friend removed", otherId });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    
     // --- Private helpers ---
     private bool TryGetUserId(out int userId)
     {

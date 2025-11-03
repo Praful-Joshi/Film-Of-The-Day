@@ -8,34 +8,34 @@
     <!-- Search Form -->
     <form asp-action="SearchMovie" method="post" class="flex space-x-2">
         <input asp-for="SearchQuery" placeholder="Search movie or TV show..." 
-               class="flex-1 text-brand-text-light border border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button type="submit" class="bg-brand-bg-blue text-brand-text-light px-4 py-2 rounded hover:bg-brand-bg-blue-hover transition">Search</button>
+               class="flex-1 text-brand-light border border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button type="submit" class="bg-brand-blue text-brand-light px-4 py-2 rounded hover:bg-brand-blue-hover transition">Search</button>
     </form>
 
     <!-- Search Results -->
     @if (Model.SearchResults != null && Model.SearchResults.Any())
     {
-        <h5 class="text-brand-text-light font-semibold">Select a film:</h5>
+        <h5 class="text-brand-light font-semibold">Select a film:</h5>
 
         <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             @foreach (var movie in Model.SearchResults)
             {
                 <div class="movie-card hidden cursor-pointer">
-                    <div class="movie-select-card bg-brand-bg-dark rounded overflow-hidden shadow hover:shadow-lg transition"
+                    <div class="movie-select-card bg-brand-black rounded overflow-hidden shadow hover:shadow-lg transition"
                          data-title="@movie.Title" 
                          data-poster="@movie.PosterUrl" 
                          data-link="@movie.MovieUrl">
                         <img src="@movie.PosterUrl" 
                              onerror="this.onerror=null;this.src='/images/placeholder.svg';"
                              class="w-full object-cover h-60 sm:h-60 md:h-40 lg:h-40" />
-                        <div class="text-center text-sm mt-1 mb-2 font-medium text-brand-text-light">@movie.Title</div>
+                        <div class="text-center text-sm mt-1 mb-2 font-medium text-brand-light">@movie.Title</div>
                     </div>
                 </div>
             }
         </div>
 
         <div class="text-center mt-3">
-            <button id="toggleBtn" type="button" class="bg-brand-text-muted text-brand-text-light px-3 py-1 rounded hover:bg-brand-text-muted-hover transition">Show more</button>
+            <button id="toggleBtn" type="button" class="bg-brand-muted text-brand-light px-3 py-1 rounded hover:bg-brand-muted-hover transition">Show more</button>
         </div>
     }
 
@@ -47,16 +47,16 @@
         <input type="hidden" id="SelectedMovieLink" name="SelectedMovieLink" />
 
         <div class="flex flex-col">
-            <label asp-for="Title" class="mb-1 font-medium text-brand-text-light">Title</label>
-            <input asp-for="Title" class="border border-gray-500 text-brand-text-light rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label asp-for="Title" class="mb-1 font-medium text-brand-light">Title</label>
+            <input asp-for="Title" class="border border-gray-500 text-brand-light rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
 
         <div class="flex flex-col">
-            <label asp-for="Description" class="mb-1 font-medium text-brand-text-light">Description</label>
-            <textarea asp-for="Description" class="border text-brand-text-light border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            <label asp-for="Description" class="mb-1 font-medium text-brand-light">Description</label>
+            <textarea asp-for="Description" class="border text-brand-light border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
 
-        <button type="submit" class="bg-brand-bg-green text-brand-text-light px-4 py-2 rounded hover:bg-brand-bg-green-hover transition">Create Post</button>
+        <button type="submit" class="bg-brand-green text-brand-light px-4 py-2 rounded hover:bg-brand-green-hover transition">Create Post</button>
     </form>
 </div>
 

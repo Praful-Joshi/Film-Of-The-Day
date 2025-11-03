@@ -9,15 +9,15 @@
     @if (Model.Notifications == null || !Model.Notifications.Any())
     {
         <div class="max-w-3xl mx-auto">
-            <p class="flex justify-center text-brand-text-muted">No new notifications.</p>
+            <p class="flex justify-center text-brand-muted">No new notifications.</p>
         </div>
     }
     else
     {
-        <ul class="bg-brand-bg-dark">
+        <ul class="bg-brand-black">
             @foreach (var notif in Model.Notifications)
             {
-                <li class="flex items-center justify-between p-4 hover:bg-brand-bg-dark-hover transition">
+                <li class="flex items-center justify-between p-4 hover:bg-brand-black-hover transition">
 
                     <!-- Left side: Avatar + message -->
                     <div class="flex items-center space-x-3">
@@ -26,11 +26,11 @@
                             class="w-10 h-10 rounded-full object-cover" />
 
                         <div class="flex flex-col">
-                            <span class="text-sm text-brand-text-light">
+                            <span class="text-sm text-brand-light">
                                 @notif.Message
                             </span>
 
-                            <span class="text-xs text-brand-text-muted">
+                            <span class="text-xs text-brand-muted">
                                 @notif.CreatedAt.ToLocalTime().ToString("MMM d, h:mm tt")
                             </span>
                         </div>
@@ -46,7 +46,7 @@
                             <input type="hidden" name="id" value="@notif.Id" />
                             <input type="hidden" name="redirectUrl" value="@notif.Link" />
                             <button type="submit"
-                                    class="text-brand-text-link text-sm hover:underline whitespace-nowrap bg-transparent border-none p-0 cursor-pointer">
+                                    class="text-brand-link text-sm hover:underline whitespace-nowrap bg-transparent border-none p-0 cursor-pointer">
                                 View
                             </button>
                         </form>
