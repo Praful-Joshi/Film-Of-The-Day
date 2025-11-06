@@ -1,0 +1,54 @@
+@model FilmOfTheDay.Web.Models.Profile.ProfileViewModel
+@using FilmOfTheDay.Web.Services.Interfaces;
+@using FilmOfTheDay.Web.Models.Popup;
+
+<form method="post"
+        class="inline text-sm friendship-form"
+        asp-antiforgery="true"
+        id="friendshipForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="otherId" value="@Model.UserID" />
+
+    @switch (Model.friendshipState)
+    {
+        case FriendshipState.None:
+            <button formaction="@Url.Action("SendRequest", "Connection")"
+                    class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150">
+                Add Friend
+            </button>
+            break;
+
+        case FriendshipState.RequestSent:
+            <button disabled
+                    class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue rounded-full shadow-sm transition-transform duration-150 opacity-80">
+                Requested
+            </button>
+            break;
+
+        case FriendshipState.RequestReceived:
+            <button formaction="@Url.Action("AcceptRequest", "Connection")"
+                    class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150">
+                Accept Request
+            </button>
+            break;
+
+        case FriendshipState.Friends:
+            <button type="button"
+                    class="friend-btn px-3 mb-1 py-1.5 font-semibold text-brand-light bg-brand-blue hover:bg-brand-blue-hover rounded-full shadow-sm active:scale-95 transition-transform duration-150"
+                    data-popup-target="removeFriendPopup">
+                Friends
+            </button>
+
+            @await Component.InvokeAsync("ConfirmPopup", new ConfirmPopupViewModel
+            {
+                PopupId = "removeFriendPopup",
+                Title = "Remove friend?",
+                Message = $"Are you sure you want to remove {Model.UserName} from your friends list?",
+                YesText = "Yes, remove",
+                NoText = "Cancel",
+                YesAction = Url.Action("RemoveFriend", "Connection", new { otherId = Model.UserID }),
+                RedirectAftersuccess = Url.Action("Index", "Home")
+            })
+            break;
+    }
+</form>

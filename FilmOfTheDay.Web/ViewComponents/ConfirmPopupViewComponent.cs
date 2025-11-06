@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using FilmOfTheDay.Web.Models.Post;
+using FilmOfTheDay.Web.Models.Popup;
 
 namespace FilmOfTheDay.Web.ViewComponents;
 public class ConfirmPopupViewComponent : ViewComponent

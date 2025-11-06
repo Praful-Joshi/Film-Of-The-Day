@@ -1,5 +1,4 @@
-namespace FilmOfTheDay.Web.Models.Post;
-
+namespace FilmOfTheDay.Web.Models.Popup;
 public class ConfirmPopupViewModel
 {
     public string PopupId { get; set; } = "confirmModal";

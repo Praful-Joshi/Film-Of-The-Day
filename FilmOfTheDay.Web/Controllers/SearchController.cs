@@ -16,10 +16,7 @@ public class SearchController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(string query)
     {
-        if (string.IsNullOrWhiteSpace(query))
-            return View("EmptySearch");
-
-        var model = await _searchService.SearchUsersAsync(query);
+        var model = await _searchService.SearchUsersAsync(query, User);
         return View(model);
     }
 }

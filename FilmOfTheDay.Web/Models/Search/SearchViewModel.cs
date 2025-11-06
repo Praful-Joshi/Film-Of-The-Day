@@ -1,14 +1,7 @@
-namespace FilmOfTheDay.Web.Models.Search;
+using FilmOfTheDay.Web.Models.Profile;
 
+namespace FilmOfTheDay.Web.Models.Search;
 public class SearchViewModel
 {
-    public List<SearchedUserViewModel> Users { get; set; } = new();
-}
-
-public class SearchedUserViewModel
-{
-    public int UserID { get; set; }
-    public string? UserName { get; set; }
-    public string? ProfileImageUrl { get; set; }
-    public string? Email { get; set; }
+    public List<ProfileViewModel>? Users { get; set; }
 }
