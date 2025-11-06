@@ -2,15 +2,16 @@ using FilmOfTheDay.Core.Entities;
 using FilmOfTheDay.Infrastructure.Data;
 using FilmOfTheDay.Web.Services.Interfaces;
 using FilmOfTheDay.Web.Models.Notification;
+using FilmOfTheDay.Web.Models.Connection;
+using FilmOfTheDay.Web.Models.Profile;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FilmOfTheDay.Web.Services.Implementations;
 public class ConnectionService : IConnectionService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly INotificationService _notifService;
-
     public ConnectionService(ApplicationDbContext dbContext, INotificationService notifService)
     {
         _dbContext = dbContext;
@@ -129,5 +130,68 @@ public class ConnectionService : IConnectionService
             f.SenderId == senderId &&
             f.ReceiverId == receiverId &&
             f.Status == FriendshipStatus.Pending);
+    }
+
+    public async Task<FriendsPageViewModel> GetFriendsPageViewModelAsync(ClaimsPrincipal loggedInUser)
+    {
+        // Step 0: Get logged-in user ID
+        var loggedInUserIdStr = loggedInUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(loggedInUserIdStr) || !int.TryParse(loggedInUserIdStr, out var userId))
+        {
+            return new FriendsPageViewModel
+            {
+                FriendsList = null
+            };
+        }
+
+        // Step 1: Get all friend IDs for the given user
+        List<int> friendIds = await GetAllFriendsIdsAsync(userId);
+
+        if (!friendIds.Any())
+        {
+            return new FriendsPageViewModel
+            {
+                FriendsList = null
+            };
+        }
+
+        // Step 2: Fetch user data for those friend IDs
+        var friendsData = await _dbContext.Users
+            .AsNoTracking()
+            .Where(u => friendIds.Contains(u.Id))
+            .Select(u => new
+            {
+                u.Id,
+                u.Username,
+                u.Email
+            })
+            .ToListAsync();
+
+        // Step 3: Build ProfileViewModels manually
+        var friendProfiles = friendsData.Select(friend => new ProfileViewModel
+        {
+            UserID = friend.Id,
+            UserName = friend.Username,
+            Email = friend.Email,
+            friendshipState = GetFriendshipState(userId, friend.Id)
+        }).ToList();
+
+        // Step 4: Wrap and return
+        return new FriendsPageViewModel
+        {
+            FriendsList = friendProfiles
+        };
+    }
+
+
+    public async Task<List<int>> GetAllFriendsIdsAsync(int userId)
+    {
+        return await _dbContext.Friendships
+                    .AsNoTracking()
+                    .Where(f =>
+                        (f.SenderId == userId || f.ReceiverId == userId) &&
+                        f.Status == FriendshipStatus.Accepted)
+                    .Select(f => f.SenderId == userId ? f.ReceiverId : f.SenderId)
+                    .ToListAsync();
     }
 }

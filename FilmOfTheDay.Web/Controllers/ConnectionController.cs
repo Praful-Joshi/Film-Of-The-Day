@@ -14,6 +14,18 @@ public class ConnectionController : Controller
         _connectionService = connectionService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Index(int id)
+    {
+        if (!TryGetUserId(out var loggedInUserId))
+            return Unauthorized();
+
+        // If viewing someone else's friends page, you could later add access control
+        var model = await _connectionService.GetFriendsPageViewModelAsync(User);
+        return View(model);
+    }
+
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SendRequest(int otherId)

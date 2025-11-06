@@ -30,7 +30,21 @@
 
             <div class="flex gap-6 mt-3 text-brand-light">
                 <div><strong>@Model.PostCount</strong> Posts</div>
-                <div><strong>@Model.FriendsCount</strong> Friends</div>
+                @if(isOwner)
+                {
+                    <div>
+                        <a asp-controller="Connection"
+                        asp-action="Index"
+                        asp-route-id="@Model.UserID"
+                        class="hover:text-brand-link">
+                            <strong>@Model.FriendsCount</strong> Friends
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div><strong>@Model.FriendsCount</strong> Friends</div>
+                }
             </div>
         </div>
     </div>
