@@ -17,6 +17,8 @@ RUN dotnet publish FilmOfTheDay.Web/FilmOfTheDay.Web.csproj -c Release -o /app/p
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
+# Fly.io requires listening on 8080
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 ENV DOTNET_ENVIRONMENT=Production
-EXPOSE 5000
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "FilmOfTheDay.Web.dll"]
