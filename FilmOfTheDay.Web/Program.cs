@@ -14,22 +14,18 @@ var env = builder.Environment.EnvironmentName;
 string? connectionString = env switch
 {
     "Development" =>
-        Environment.GetEnvironmentVariable("FLY_DEV_DB")
-        ?? builder.Configuration.GetConnectionString("DefaultConnection"),
+        builder.Configuration.GetConnectionString("LOCAL_DEV_DB"),
 
     "Production" =>
-        Environment.GetEnvironmentVariable("FLY_PROD_DB")
-        ?? builder.Configuration.GetConnectionString("DefaultConnection"),
+        Environment.GetEnvironmentVariable("FLY_PROD_DB"),
 
     _ => throw new Exception($"Unknown environment: {env}")
 };
-Console.WriteLine($"[DEBUG] ENV = {env}");
-Console.WriteLine($"[DEBUG] Conn = '{connectionString}'");
 
 // If connection string still ended up null → fail fast with a clear message
 if (string.IsNullOrWhiteSpace(connectionString))
     throw new Exception($"Database connection string NOT found for environment '{env}'. " +
-                        $"Expected env var FLY_DEV_DB or FLY_PROD_DB.");
+                        $"Expected env var LOCAL_DEV or FLY_PROD_DB.");
 
 // Register Postgres DB context
 builder.Services.AddDbContext<PostgresApplicationDbContext>(options =>
