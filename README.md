@@ -1,7 +1,7 @@
 # 🎬 FilmOfTheDay
 
 **FilmOfTheDay** is a full-featured ASP.NET Core MVC web application built using **Clean Architecture** principles.  
-It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions. [Try it yourself!](https://film-of-the-day.onrender.com)
+It’s a social platform for film enthusiasts to share, discover, and connect through posts, profiles, and film-based interactions. [Try it yourself!](https://film-of-the-day.fly.dev)
 
 ---
 
@@ -19,7 +19,7 @@ Each layer has a single responsibility, allowing the app to grow easily without 
 2. **Infrastructure Layer (Data Access & Persistence)**  
    - Uses **Entity Framework Core** for database operations.
    - Contains the `ApplicationDbContext` which manages entities and database migrations.
-   - Manages connection to either **SQL Server (Development)** or **PostgreSQL (Production)**.
+   - Uses **PostgreSQL** (via Npgsql) in both Development and Production.
 
 3. **Web Layer (Presentation & Services)**  
    - Implements MVC pattern (`Controllers`, `Views`, `ViewModels`).
@@ -46,12 +46,13 @@ This ensures controllers are only responsible for request handling — not objec
 The project uses **two environments**:
 
 - **Development (Dev):**
-  - Uses a **local SQL Server** database.
-  - Ideal for debugging and local testing.
+  - Uses a separate **PostgreSQL** dev database hosted on **Fly.io**.
+  - Connection string is read from `ConnectionStrings:LOCAL_DEV_DB` in `appsettings.Development.json`.
 
 - **Production (Prod):**
-  - Uses **PostgreSQL** hosted on **Render.com**.
-  - The live version of the app is hosted on Render's **free tier**.
+  - Uses **PostgreSQL** hosted on **Fly.io**.
+  - Connection string is read from the `FLY_PROD_DB` environment variable (set as a Fly secret).
+  - The live app runs on **Fly.io** at [film-of-the-day.fly.dev](https://film-of-the-day.fly.dev).
 
 Environment configuration is handled using the built-in `DOTNET_ENVIRONMENT` variable:
 ```bash
@@ -60,7 +61,7 @@ export DOTNET_ENVIRONMENT=Development
 export DOTNET_ENVIRONMENT=Production
 ```
 
-Each environment uses its own connection string and settings, defined in:
+Each environment uses its own settings, defined in:
 - `appsettings.Development.json`
 - `appsettings.Production.json`
 
@@ -68,11 +69,11 @@ Each environment uses its own connection string and settings, defined in:
 
 ## 🚀 Continuous Integration & Deployment (CI/CD)
 
-The project benefits from **Render’s automatic CI/CD** pipeline:
+The project deploys to **Fly.io** via **GitHub Actions** (`.github/workflows/fly-deploy.yml`):
 
-- The app is deployed directly from **GitHub**.
-- Render continuously tracks the **main branch**.
-- Every new commit to `main` triggers an **automatic build and deployment**.
+- Every push to `main` triggers `flyctl deploy --remote-only`.
+- Fly builds the app from the `Dockerfile` and rolls out the new image.
+- App settings live in `fly.toml`; machines auto-stop when idle and auto-start on request.
 - This ensures the production site is always up to date with the latest tested code.
 
 ---
@@ -120,8 +121,8 @@ The Clean Architecture combined with service-oriented design ensures the project
 - **Framework:** ASP.NET Core MVC 8.0  
 - **ORM:** Entity Framework Core  
 - **Frontend:** Razor Views + TailwindCSS  
-- **Database:** SQL Server (Dev) / PostgreSQL (Prod)  
-- **Hosting:** Render.com  
+- **Database:** PostgreSQL (Dev & Prod, hosted on Fly.io)  
+- **Hosting:** Fly.io (Docker)  
 - **External API:** The Movie Database (TMDb) API  
 
 ---
